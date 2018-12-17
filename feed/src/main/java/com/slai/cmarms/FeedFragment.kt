@@ -10,19 +10,22 @@ import kotlinx.android.synthetic.main.fragment_feed.*
 
 class FeedFragment : Fragment() {
 
+    lateinit var presenter: FeedPresenter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_feed, container, false)
     }
 
     override fun onResume() {
         super.onResume()
+        presenter = FeedPresenter()
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
     override fun onPause() {
         super.onPause()
-
+        presenter.dispose()
     }
 
 
