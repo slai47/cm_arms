@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId "com.slai.cmarms"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+
+    }
+
+    buildTypes {
+       release {
+           minifyEnabled false
+           proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+       }
+    }
+
+}
+
+dependencies {
+    implementation project(':feed')
+    implementation project(':base')
+    wearApp project(':wear')
+    implementation 'com.google.android.gms:play-services-wearable:+'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    implementation 'androidx.preference:preference:1.1.0-alpha01'
+}
