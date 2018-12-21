@@ -1,4 +1,4 @@
-package com.slai.cmarms
+package com.slai.cmarms.presenters
 
 import com.slai.cmarms.interfaces.IPresenter
 

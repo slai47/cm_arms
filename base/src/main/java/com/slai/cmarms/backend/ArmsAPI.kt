@@ -4,6 +4,9 @@ import android.util.Log
 import com.slai.cmarms.interfaces.IArmsService
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.Query
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -11,8 +14,10 @@ class ArmsAPI : IArmsService {
 
     val baseURL = "http://www.armslist.com/feed.rss?"
 
+    val job : Job = Job()
+    val scope = CoroutineScope(Dispatchers.Default + job)
 
-    override suspend fun getPosts(query : Query) : List<Post>{
+    override fun getPosts(query : Query) : List<Post>{
         // get RSS feed
         val queryItems = query.getURLExtras()
         val url = "$baseURL?$queryItems"
@@ -27,13 +32,11 @@ class ArmsAPI : IArmsService {
         // parse RSS Feed
         if(feed.isNullOrEmpty())
             list = parsePosts(feed!!, list)
-
         return list
     }
 
     fun parsePosts(feed : String, list : List<Post>) : List<Post> {
         Log.d(ArmsAPI::class.java.name, feed)
-
 
         return list
     }

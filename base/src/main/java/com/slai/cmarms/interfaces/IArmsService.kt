@@ -6,7 +6,7 @@ import com.slai.cmarms.model.Query
 
 interface IArmsService {
 
-    suspend fun getPosts(query : Query) : List<Post>
+    fun getPosts(query : Query) : List<Post>
 
 
     companion object {
