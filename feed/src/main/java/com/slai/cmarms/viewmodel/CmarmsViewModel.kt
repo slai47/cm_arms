@@ -27,4 +27,10 @@ class CmarmsViewModel : ViewModel() {
         }
     }
 
+    fun reset(){
+        if(::posts.isInitialized){
+            posts.value = ArrayList()
+        }
+    }
+
 }

@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FeedAdapter
+import com.slai.cmarms.listeners.EndlessRecyclerViewScrollListener
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.presenters.FeedPresenter
 import com.slai.cmarms.viewmodel.CmarmsViewModel
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_feed.*
 class FeedFragment : Fragment() {
 
     val presenter: FeedPresenter by lazy { FeedPresenter(this) }
-    private val viewModel: CmarmsViewModel by lazy { ViewModelProviders.of(this).get(CmarmsViewModel::class.java) }
+    private val viewModel: CmarmsViewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
 
     lateinit var adapter : FeedAdapter
     lateinit var manager : LinearLayoutManager
@@ -41,14 +41,24 @@ class FeedFragment : Fragment() {
             adapter.posts.addAll(it)
         })
 
+        setupSwipeToRefresh()
+
         if(viewModel.getPosts().value.isNullOrEmpty()){
             feed_progress.visibility = View.VISIBLE
             presenter.searchForPosts(viewModel.query)
         } else {
             feed_progress.visibility = View.GONE
         }
+    }
 
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    private fun setupSwipeToRefresh() {
+        feed_swipe_refresh.setOnRefreshListener {
+            if(!feed_swipe_refresh.isRefreshing) {
+                viewModel.reset()
+                feed_progress.visibility = View.VISIBLE
+                presenter.searchForPosts(viewModel.query)
+            }
+        }
     }
 
     fun setupAdapter() {
@@ -62,6 +72,15 @@ class FeedFragment : Fragment() {
         divider.setDrawable(ContextCompat.getDrawable(feed_recycler.context, R.drawable.shape_divider)!!)
         feed_recycler.addItemDecoration(divider)
 
+        val listener = object : EndlessRecyclerViewScrollListener(manager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                viewModel.query.page++
+                presenter.searchForPosts(viewModel.query)
+            }
+        }
+
+        feed_recycler.addOnScrollListener(listener)
+
         feed_recycler.adapter = adapter
     }
 
@@ -70,24 +89,11 @@ class FeedFragment : Fragment() {
         presenter.dispose()
     }
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_home -> {
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_dashboard -> {
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
-
     fun onPostsReceived(list : List<Post>) {
         if(!list.isEmpty())
             viewModel.addPosts(list)
+        else if(list.isEmpty() && adapter.posts.isNotEmpty())
+            Snackbar.make(feed_recycler, "No more items", Snackbar.LENGTH_SHORT)
         else
             Snackbar.make(feed_recycler, "Failed to grab data", Snackbar.LENGTH_SHORT)
 

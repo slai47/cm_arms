@@ -11,6 +11,6 @@ class MainActivity : AppCompatActivity() {
 
         val fragment = supportFragmentManager.findFragmentById(R.id.container)
         if(fragment == null)
-            supportFragmentManager.beginTransaction().add(R.id.container, FeedFragment()).commit()
+            supportFragmentManager.beginTransaction().add(R.id.container, NavigationFragment()).commit()
     }
 }

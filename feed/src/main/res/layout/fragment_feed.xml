@@ -8,21 +8,17 @@
         android:layout_height="match_parent"
         tools:context="com.slai.cmarms.FeedFragment">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/navigation"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/feed_swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
-            app:menu="@menu/navigation"
-            android:layout_alignParentBottom="true"
-    />
+            android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/feed_recycler"
-            android:layout_above="@id/navigation"
-    />
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/feed_recycler"
+        />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
             style="?android:attr/progressBarStyle"
@@ -30,6 +26,5 @@
             android:layout_height="wrap_content"
             android:id="@+id/feed_progress"
             android:layout_centerInParent="true"/>
-
 
 </RelativeLayout>
