@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FeedAdapter
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.presenters.FeedPresenter
@@ -18,8 +21,8 @@ import kotlinx.android.synthetic.main.fragment_feed.*
 
 class FeedFragment : Fragment() {
 
-    lateinit var presenter: FeedPresenter
-    lateinit var viewModel: CmarmsViewModel
+    val presenter: FeedPresenter by lazy { FeedPresenter(this) }
+    private val viewModel: CmarmsViewModel by lazy { ViewModelProviders.of(this).get(CmarmsViewModel::class.java) }
 
     lateinit var adapter : FeedAdapter
     lateinit var manager : LinearLayoutManager
@@ -30,19 +33,19 @@ class FeedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        presenter = FeedPresenter(this)
-
-        viewModel = ViewModelProviders.of(this).get(CmarmsViewModel::class.java)
-        viewModel.getPosts().observe(this, Observer {
-            // Update UI
-            adapter?.posts.addAll(it)
-        })
 
         setupAdapter()
+
+        viewModel.getPosts().observe(this, Observer {
+            // Update UI
+            adapter.posts.addAll(it)
+        })
 
         if(viewModel.getPosts().value.isNullOrEmpty()){
             feed_progress.visibility = View.VISIBLE
             presenter.searchForPosts(viewModel.query)
+        } else {
+            feed_progress.visibility = View.GONE
         }
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
@@ -54,6 +57,11 @@ class FeedFragment : Fragment() {
         adapter = FeedAdapter()
 
         feed_recycler.layoutManager = manager
+
+        val divider = DividerItemDecoration(feed_recycler.context, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(ContextCompat.getDrawable(feed_recycler.context, R.drawable.shape_divider)!!)
+        feed_recycler.addItemDecoration(divider)
+
         feed_recycler.adapter = adapter
     }
 
@@ -78,7 +86,11 @@ class FeedFragment : Fragment() {
     }
 
     fun onPostsReceived(list : List<Post>) {
-        viewModel.addPosts(list)
+        if(!list.isEmpty())
+            viewModel.addPosts(list)
+        else
+            Snackbar.make(feed_recycler, "Failed to grab data", Snackbar.LENGTH_SHORT)
+
         feed_progress.visibility = View.GONE
     }
 }

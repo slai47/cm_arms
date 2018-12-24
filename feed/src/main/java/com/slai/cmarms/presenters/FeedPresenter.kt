@@ -1,10 +1,21 @@
 package com.slai.cmarms.presenters
 
+import android.util.Log
 import com.slai.cmarms.FeedFragment
 import com.slai.cmarms.interfaces.IArmsService
 import com.slai.cmarms.interfaces.IPresenter
+import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.Query
+import com.slai.cmarms.model.SaleType
 import kotlinx.coroutines.*
+import me.toptas.rssconverter.RssFeed
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import android.R.attr.x
+import me.toptas.rssconverter.RssItem
+import java.util.regex.Pattern
+
 
 class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
 
@@ -14,12 +25,50 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
     fun searchForPosts(query : Query) {
         val api = IArmsService.getService()
         // launch coroutines
-        scope.async {
-            val list = api.getPosts(query)
-            withContext(Dispatchers.Main) {
-                feedFragment.onPostsReceived(list)
-            }
+        scope.launch {
+            val request = api.getPosts("http://www.armslist.com/feed.rss/" + query.getURLExtras())
+            request.enqueue(object : Callback<RssFeed> {
+                override fun onFailure(call: Call<RssFeed>, t: Throwable) {
+                    scope.launch {
+                        feedFragment.onPostsReceived(ArrayList())
+                    }
+                }
+
+                override fun onResponse(call: Call<RssFeed>, response: Response<RssFeed>) {
+                    val list = ArrayList<Post>()
+                    if(response.isSuccessful) {
+                        for (it in response.body()?.items!!) {
+                            Log.d(FeedPresenter::class.java.simpleName,"${it.title}")
+                            val post = parsePost(it)
+                            list.add(post)
+                        }
+                    }
+                    scope.launch(Dispatchers.Main) {
+                        feedFragment.onPostsReceived(list)
+                    }
+                }
+            })
         }
+    }
+
+    private fun parsePost(it: RssItem): Post {
+        val fullTitle = it.title.toString()
+        var titleEndIndex = fullTitle.indexOf("$")
+        if (titleEndIndex < 0) // check if now amount is there and its an offer
+            titleEndIndex = fullTitle.indexOf("-")
+        if(titleEndIndex < 0) // check if the offer isn't there.
+            titleEndIndex = fullTitle.length
+
+        val simpleTitle = fullTitle.substring(fullTitle.indexOf(")") + 1, titleEndIndex - 2).trim()
+
+        val post = Post(simpleTitle)
+        post.description = it.description.toString()
+        post.image = it.image.toString()
+        post.url = it.link.toString()
+        post.location = fullTitle.substring(fullTitle.indexOf("(") + 1, fullTitle.indexOf(")")).trim()
+        post.price = fullTitle.substring(titleEndIndex + 1, fullTitle.length).trim()
+
+        return post
     }
 
     override fun dispose() {

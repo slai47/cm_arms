@@ -9,11 +9,12 @@ import com.slai.cmarms.model.Query
 class CmarmsViewModel : ViewModel() {
 
     private lateinit var posts : MutableLiveData<ArrayList<Post>>
-    val query = Query()
+    val query by lazy { Query() }
 
     fun getPosts() : LiveData<ArrayList<Post>> {
         if(!::posts.isInitialized){
             posts = MutableLiveData()
+            posts.value = ArrayList()
         }
         return posts
     }
@@ -21,6 +22,9 @@ class CmarmsViewModel : ViewModel() {
     fun addPosts(newPosts : List<Post>) {
         if(::posts.isInitialized){
            posts.value?.addAll(newPosts)
+            // doing this for force the viewmodel to alert all observers of changes
+            posts.value = posts.value
         }
     }
+
 }

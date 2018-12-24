@@ -10,7 +10,7 @@ data class Query(var search : String = "") {
     fun getURLExtras() : String {
         val builder = StringBuilder()
 
-        builder.append("search=$search")
+        builder.append("?search=$search")
 
         builder.append("&location=$location")
 

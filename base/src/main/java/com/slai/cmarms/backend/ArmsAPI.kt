@@ -10,14 +10,14 @@ import kotlinx.coroutines.Job
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class ArmsAPI : IArmsService {
+class ArmsAPI {
 
     val baseURL = "http://www.armslist.com/feed.rss?"
 
     val job : Job = Job()
     val scope = CoroutineScope(Dispatchers.Default + job)
 
-    override fun getPosts(query : Query) : List<Post>{
+    fun getPosts(query : Query) : List<Post>{
         // get RSS feed
         val queryItems = query.getURLExtras()
         val url = "$baseURL?$queryItems"
