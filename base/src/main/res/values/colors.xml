@@ -7,4 +7,6 @@
     <color name="background">#FFF</color>
     <color name="textPrimary">#212121</color>
     <color name="textSecondary">#434343</color>
+
+    <color name="divider">#565656</color>
 </resources>
