@@ -2,19 +2,21 @@ package com.slai.cmarms.model
 
 data class Query(var search : String = "") {
 
-    var location : String = ""
-    var category : String = ""
-    var page : Int = 0
+    var location : String = "usa"
+    var category : String = "all"
+    var page : Int = 1
 
 
     fun getURLExtras() : String {
         val builder = StringBuilder()
 
-        builder.append("?search=$search")
+        builder.append("?")
+        builder.append("location=$location")
 
-        builder.append("&location=$location")
+        if(search.isNotEmpty())
+            builder.append("&search=$search")
 
-        if(page > 0) builder.append("&page=$page")
+        if(page > 1) builder.append("&page=$page")
 
         if(category.isNotEmpty()) builder.append("&category=$category")
 

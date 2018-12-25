@@ -36,14 +36,14 @@ class FeedFragment : Fragment() {
 
         setupAdapter()
 
-        viewModel.getPosts().observe(this, Observer {
+        viewModel.getLivePosts().observe(this, Observer {
             // Update UI
-            adapter.posts.addAll(it)
+            adapter.addPosts(it)
         })
 
         setupSwipeToRefresh()
 
-        if(viewModel.getPosts().value.isNullOrEmpty()){
+        if(viewModel.getPosts().isNullOrEmpty()){
             feed_progress.visibility = View.VISIBLE
             presenter.searchForPosts(viewModel.query)
         } else {
@@ -55,6 +55,7 @@ class FeedFragment : Fragment() {
         feed_swipe_refresh.setOnRefreshListener {
             if(!feed_swipe_refresh.isRefreshing) {
                 viewModel.reset()
+                presenter.dispose()
                 feed_progress.visibility = View.VISIBLE
                 presenter.searchForPosts(viewModel.query)
             }
@@ -75,10 +76,10 @@ class FeedFragment : Fragment() {
         val listener = object : EndlessRecyclerViewScrollListener(manager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 viewModel.query.page++
+                feed_progress.visibility = View.VISIBLE
                 presenter.searchForPosts(viewModel.query)
             }
         }
-
         feed_recycler.addOnScrollListener(listener)
 
         feed_recycler.adapter = adapter
@@ -89,7 +90,7 @@ class FeedFragment : Fragment() {
         presenter.dispose()
     }
 
-    fun onPostsReceived(list : List<Post>) {
+    fun onPostsReceived(list : ArrayList<Post>) {
         if(!list.isEmpty())
             viewModel.addPosts(list)
         else if(list.isEmpty() && adapter.posts.isNotEmpty())

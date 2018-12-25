@@ -26,7 +26,8 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
         val api = IArmsService.getService()
         // launch coroutines
         scope.launch {
-            val request = api.getPosts("http://www.armslist.com/feed.rss/" + query.getURLExtras())
+            var url = "http://www.armslist.com/feed.rss/" + query.getURLExtras()
+            val request = api.getPosts(url)
             request.enqueue(object : Callback<RssFeed> {
                 override fun onFailure(call: Call<RssFeed>, t: Throwable) {
                     scope.launch {
@@ -55,11 +56,11 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
         val fullTitle = it.title.toString()
         var titleEndIndex = fullTitle.indexOf("$")
         if (titleEndIndex < 0) // check if now amount is there and its an offer
-            titleEndIndex = fullTitle.indexOf("-")
+            titleEndIndex = fullTitle.indexOf("- Offer") - 1
         if(titleEndIndex < 0) // check if the offer isn't there.
             titleEndIndex = fullTitle.length
 
-        val simpleTitle = fullTitle.substring(fullTitle.indexOf(")") + 1, titleEndIndex - 2).trim()
+        val simpleTitle = fullTitle.substring(fullTitle.indexOf(")") + 1, titleEndIndex - 1).trim()
 
         val post = Post(simpleTitle)
         post.description = it.description.toString()
@@ -67,6 +68,10 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
         post.url = it.link.toString()
         post.location = fullTitle.substring(fullTitle.indexOf("(") + 1, fullTitle.indexOf(")")).trim()
         post.price = fullTitle.substring(titleEndIndex + 1, fullTitle.length).trim()
+
+        if(post.url.isNotEmpty()){
+            post.id = post.url.replace("http://www.armslist.com/posts/", "").toLong()
+        }
 
         return post
     }

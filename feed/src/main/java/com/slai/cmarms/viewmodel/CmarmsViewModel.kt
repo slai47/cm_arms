@@ -8,28 +8,34 @@ import com.slai.cmarms.model.Query
 
 class CmarmsViewModel : ViewModel() {
 
-    private lateinit var posts : MutableLiveData<ArrayList<Post>>
+    private lateinit var posts : ArrayList<Post> // adding this to allow use of MVVM and prevent dups
+    private lateinit var livePosts : MutableLiveData<ArrayList<Post>>
     val query by lazy { Query() }
 
-    fun getPosts() : LiveData<ArrayList<Post>> {
-        if(!::posts.isInitialized){
-            posts = MutableLiveData()
-            posts.value = ArrayList()
+    fun getLivePosts() : LiveData<ArrayList<Post>> {
+        if(!::livePosts.isInitialized){
+            livePosts = MutableLiveData()
+            livePosts.value = ArrayList()
+            posts = ArrayList()
         }
+        return livePosts
+    }
+
+    fun getPosts() : ArrayList<Post> {
+        getLivePosts()
         return posts
     }
 
-    fun addPosts(newPosts : List<Post>) {
-        if(::posts.isInitialized){
-           posts.value?.addAll(newPosts)
-            // doing this for force the viewmodel to alert all observers of changes
-            posts.value = posts.value
+    fun addPosts(newPosts : ArrayList<Post>) {
+        if(::livePosts.isInitialized){
+            posts.addAll(newPosts)
+            livePosts.value = newPosts
         }
     }
 
     fun reset(){
-        if(::posts.isInitialized){
-            posts.value = ArrayList()
+        if(::livePosts.isInitialized){
+            livePosts.value = ArrayList()
         }
     }
 

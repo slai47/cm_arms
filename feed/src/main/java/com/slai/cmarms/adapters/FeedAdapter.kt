@@ -11,7 +11,7 @@ import com.slai.cmarms.model.Post
 
 class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
 
-    val posts = ArrayList<Post>()
+    var posts = ArrayList<Post>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         return FeedViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_feed_regular, parent, false))
@@ -32,6 +32,12 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
             val post = posts[it.tag as Int]
             Log.d(FeedAdapter::class.java.simpleName, post.url)
         }
+    }
+
+    fun addPosts(array: List<Post>){
+        val oldEnd = posts.size
+        posts.addAll(array)
+        notifyItemRangeChanged(oldEnd, posts.size)
     }
 }
 
