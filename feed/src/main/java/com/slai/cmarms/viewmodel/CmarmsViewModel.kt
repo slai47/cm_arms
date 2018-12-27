@@ -34,7 +34,7 @@ class CmarmsViewModel : ViewModel() {
         }
     }
 
-    fun reset(context : Context){
+    suspend fun reset(context : Context){
         if(::livePosts.isInitialized){
             livePosts.value = ArrayList()
         }
@@ -45,6 +45,5 @@ class CmarmsViewModel : ViewModel() {
         }
         edit.apply()
         query.reset()
-
     }
 }
