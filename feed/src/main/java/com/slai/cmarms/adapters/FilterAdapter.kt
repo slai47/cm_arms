@@ -5,25 +5,25 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.cmarms.view.SearchTextView
 
-class SearchAdapter : RecyclerView.Adapter<SearchViewHolder>() {
+class FilterAdapter : RecyclerView.Adapter<FilterViewHolder>() {
 
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder {
         //setup different ones depending on type
-        return SearchViewHolder(SearchTextView(parent.context))
+        return FilterViewHolder(SearchTextView(parent.context))
     }
 
     override fun getItemCount(): Int {
         return 0
     }
 
-    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
 
     }
 
 }
 
-class SearchViewHolder(view : View) : RecyclerView.ViewHolder(view) {
+class FilterViewHolder(view : View) : RecyclerView.ViewHolder(view) {
 
 }
