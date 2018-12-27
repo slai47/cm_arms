@@ -1,5 +1,6 @@
 package com.slai.cmarms.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,10 +34,17 @@ class CmarmsViewModel : ViewModel() {
         }
     }
 
-    fun reset(){
+    fun reset(context : Context){
         if(::livePosts.isInitialized){
             livePosts.value = ArrayList()
         }
-    }
+        val pref = context.getSharedPreferences("cmarms", Context.MODE_PRIVATE)
+        val edit = pref.edit()
+        for((title, filter) in query.filters){
+            edit.putBoolean(filter.value, false)
+        }
+        edit.apply()
+        query.reset()
 
+    }
 }

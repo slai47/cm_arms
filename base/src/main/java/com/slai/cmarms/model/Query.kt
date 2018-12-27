@@ -7,7 +7,7 @@ data class Query(var search : String = "") {
     var page : Int = 1
     var currency : String = ""
 
-    var filters = ArrayList<String>()
+    var filters = HashMap<String, Filter>()
 
     var lowPrice : Int = 0
     var highPrice : Int = 0
@@ -36,10 +36,22 @@ data class Query(var search : String = "") {
         if(highPrice > 0) builder.append("&endprice=$highPrice")
 
         if(filters.isNotEmpty()) {
-            for (cal in filters) {
-                builder.append("&tag=$cal")
+            for ((title, va) in filters) {
+                builder.append("&tag=$va")
             }
         }
         return builder.toString()
+    }
+
+    fun reset() {
+        location = "usa"
+        category = "guns"
+        page = 1
+        currency = ""
+        filters.clear()
+        lowPrice = 0
+        highPrice = 0
+        sellerType = -1
+
     }
 }
