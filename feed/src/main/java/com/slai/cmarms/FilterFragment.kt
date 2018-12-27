@@ -8,15 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.slai.cmarms.adapters.SearchAdapter
+import com.slai.cmarms.adapters.FilterAdapter
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment : Fragment() {
+class FilterFragment : Fragment() {
 
     lateinit var viewModel : CmarmsViewModel
 
-    lateinit var adapter : SearchAdapter
+    lateinit var adapter : FilterAdapter
     lateinit var manager : GridLayoutManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -31,7 +31,7 @@ class SearchFragment : Fragment() {
         search_list.apply {
             manager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
 
-            adapter = SearchAdapter()
+            adapter = FilterAdapter()
 
 
             search_list.layoutManager = manager

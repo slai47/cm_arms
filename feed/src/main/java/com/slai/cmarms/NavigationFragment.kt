@@ -30,7 +30,7 @@ class NavigationFragment : Fragment() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {
-                fragmentManager!!.beginTransaction().replace(R.id.nav_container, SearchFragment()).commit()
+                fragmentManager!!.beginTransaction().replace(R.id.nav_container, FilterFragment()).commit()
 
                 return@OnNavigationItemSelectedListener true
             }
