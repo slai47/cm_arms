@@ -8,7 +8,6 @@ import com.slai.cmarms.view.SearchTextView
 class FilterAdapter : RecyclerView.Adapter<FilterViewHolder>() {
 
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder {
         //setup different ones depending on type
         return FilterViewHolder(SearchTextView(parent.context))
@@ -21,7 +20,6 @@ class FilterAdapter : RecyclerView.Adapter<FilterViewHolder>() {
     override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
 
     }
-
 }
 
 class FilterViewHolder(view : View) : RecyclerView.ViewHolder(view) {

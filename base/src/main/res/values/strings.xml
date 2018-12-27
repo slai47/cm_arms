@@ -225,5 +225,36 @@
     <string name="caliber_9_23_winchester">9x23mm Winchester</string>
     <string name="caliber_9_23">9×23mm Largo</string>
 
+    <string name="category_firearms">Firearms</string>
+    <string name="category_antique">Antique Firearms</string>
+    <string name="category_handguns">Handguns</string>
+    <string name="category_muzzle_loaders">Muzzle Loaders</string>
+    <string name="category_nfa">NFA Firearms</string>
+    <string name="category_rifles">Rifles</string>
+    <string name="category_shotgun">Shotguns</string>
+
+    <string name="category_accessories">Firearm Accessories</string>
+    <string name="category_ammo">Ammo</string>
+    <string name="category_gun_parts">Gun Parts</string>
+    <string name="category_gun_safes">Gun Safes</string>
+    <string name="category_holsters">Holsters</string>
+    <string name="category_magazines">Magazines</string>
+    <string name="category_optics">Optics</string>
+    <string name="category_reloading">Reloading</string>
+    <string name="category_tactical_gear">Tactical Gear</string>
+
+    <string name="category_outdoor_gear">Outdoor Gear</string>
+    <string name="category_archery">Archery</string>
+    <string name="category_fishing">Fishing Gear</string>
+    <string name="category_hunting">Hunting Gear</string>
+    <string name="category_knives">Knives</string>
+    <string name="category_range_targets">Targets and Range Equipment</string>
+
+    <string name="category_other_items">Other Items</string>
+    <string name="category_air_guns">Air Guns</string>
+    <string name="category_farming">Farming Equipment</string>
+    <string name="category_mis">Miscellaneous</string>
+    <string name="category_paintball">Paintball/Airsoft</string>
+    <string name="category_vehicles">Vehicles</string>
 
 </resources>

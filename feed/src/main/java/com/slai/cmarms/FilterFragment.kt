@@ -28,14 +28,14 @@ class FilterFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(CmarmsViewModel::class.java)
 
         // setup adapter
-        search_list.apply {
+        filter_list.apply {
             manager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
 
             adapter = FilterAdapter()
 
 
-            search_list.layoutManager = manager
-            search_list.adapter = adapter
+            filter_list.layoutManager = manager
+            filter_list.adapter = adapter
         }
     }
 
