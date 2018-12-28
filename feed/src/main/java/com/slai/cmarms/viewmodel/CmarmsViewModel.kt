@@ -46,4 +46,9 @@ class CmarmsViewModel : ViewModel() {
         edit.apply()
         query.reset()
     }
+
+    fun clearPosts() {
+        posts.clear()
+        livePosts.value?.clear()
+    }
 }

@@ -4,7 +4,7 @@ import com.slai.cmarms.model.*
 
 class FiltersDataHolder {
 
-    lateinit var _actions: ArrayList<Filter>
+    private lateinit var _actions: ArrayList<Filter>
     var actions : ArrayList<Filter>
         get(){
             if(!::_actions.isInitialized) {
@@ -30,7 +30,7 @@ class FiltersDataHolder {
             _actions = value
         }
 
-    lateinit var _categories : ArrayList<Filter>
+    private lateinit var _categories : ArrayList<Filter>
     var categories : ArrayList<Filter>
         get() {
             if(!::_categories.isInitialized){
@@ -75,7 +75,7 @@ class FiltersDataHolder {
         _categories = value
     }
 
-    lateinit var _calibers : ArrayList<Filter>
+    private lateinit var _calibers : ArrayList<Filter>
     var calibers : ArrayList<Filter>
         get() {
             if(!::_calibers.isInitialized){
@@ -299,7 +299,7 @@ class FiltersDataHolder {
             _calibers = value
         }
 
-    lateinit var _manufacturers : ArrayList<Filter>
+    private lateinit var _manufacturers : ArrayList<Filter>
     var manufacturers : ArrayList<Filter>
         get() {
             if(!::_calibers.isInitialized){
@@ -311,7 +311,7 @@ class FiltersDataHolder {
             _manufacturers = value
         }
 
-    lateinit var _firearmTypes : ArrayList<Filter>
+    private lateinit var _firearmTypes : ArrayList<Filter>
     var firearmTypes : ArrayList<Filter>
         get() {
             if(!::_firearmTypes.isInitialized){

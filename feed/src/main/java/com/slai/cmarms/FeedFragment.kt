@@ -57,7 +57,8 @@ class FeedFragment : Fragment() {
         feed_swipe_refresh.setOnRefreshListener {
             if(!feed_swipe_refresh.isRefreshing) {
                 GlobalScope.launch {
-                    viewModel.reset(context!!)
+                    viewModel.clearPosts()
+                    adapter.clearPosts()
                     presenter.dispose()
                     feed_progress.visibility = View.VISIBLE
                     presenter.searchForPosts(viewModel.query)

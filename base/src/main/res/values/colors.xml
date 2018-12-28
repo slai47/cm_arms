@@ -9,4 +9,8 @@
     <color name="textSecondary">#434343</color>
 
     <color name="divider">#565656</color>
+
+    <color name="buttonText">#CDCDCD</color>
+
+    <color name="transparent">#00000000</color>
 </resources>

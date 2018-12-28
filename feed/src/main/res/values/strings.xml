@@ -7,4 +7,11 @@
         filter by andriwidodo from the Noun Project/n
         Settings by Ron Scott from the Noun Project/n
     </string>
+    <string name="search_keyword">Search Keyword</string>
+    <string name="location">Location</string>
+    <string name="low_price">Low Price</string>
+    <string name="high_price">High Price</string>
+    <string name="select_category">Select Category</string>
+    <string name="select_calibers">Select Calibers</string>
+    <string name="search">Search</string>
 </resources>
