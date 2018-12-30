@@ -9,6 +9,9 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.cmarms.R
 import com.slai.cmarms.model.Filter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : RecyclerView.Adapter<FilterViewHolder>() {
@@ -61,10 +64,12 @@ class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : Recyc
                 EventBus.getDefault().post(filter)
             } else {
                 selectedValue = filter.value
-                prefs.edit().putString(storedPrefName, filter.value).apply()
-                notifyItemChanged(previousSelection)
-                notifyItemChanged(pos)
-                previousSelection = pos
+                prefs.edit().putString(storedPrefName, filter.value).commit()
+                GlobalScope.launch(Dispatchers.Main) {
+                    notifyItemChanged(previousSelection)
+                    notifyItemChanged(pos)
+                    previousSelection = pos
+                }
             }
         }
     }

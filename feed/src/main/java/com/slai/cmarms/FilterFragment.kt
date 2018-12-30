@@ -22,9 +22,8 @@ class FilterFragment : Fragment() {
 
     lateinit var viewModel : CmarmsViewModel
 
-    val filterDB = FiltersDataHolder()
+    private val filterDB = FiltersDataHolder()
 
-    val prefs = context?.getSharedPreferences("cmarms", Context.MODE_PRIVATE)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_filter, container, false)
@@ -56,6 +55,7 @@ class FilterFragment : Fragment() {
             } catch (e: Exception) {
                 // show error
             }
+
         }
     }
 
@@ -64,7 +64,9 @@ class FilterFragment : Fragment() {
             val adapter = FilterAdapter(context!!, filterDB.categories, true, "category")
             val builder = AlertDialog.Builder(context)
             builder.setTitle(getString(R.string.categories_title))
-            builder.setView(DialogRecyclerView(context!!, adapter))
+            val recyclerView = DialogRecyclerView(context!!)
+            recyclerView.setAdapter(adapter)
+            builder.setView(recyclerView)
             builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 dialog.dismiss()
             }
@@ -77,7 +79,9 @@ class FilterFragment : Fragment() {
             val adapter = FilterAdapter(context!!, filterDB.calibers)
             val builder = AlertDialog.Builder(context)
             builder.setTitle(getString(R.string.caliber_title))
-            builder.setView(DialogRecyclerView(context!!, adapter))
+            val recyclerView = DialogRecyclerView(context!!)
+            recyclerView.setAdapter(adapter)
+            builder.setView(recyclerView)
             builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 dialog.dismiss()
             }
@@ -90,7 +94,9 @@ class FilterFragment : Fragment() {
             val adapter = FilterAdapter(context!!, filterDB.firearmTypes, true, "firearm_type")
             val builder = AlertDialog.Builder(context)
             builder.setTitle("Firearm Type")
-            builder.setView(DialogRecyclerView(context!!, adapter))
+            val recyclerView = DialogRecyclerView(context!!)
+            recyclerView.setAdapter(adapter)
+            builder.setView(recyclerView)
             builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 dialog.dismiss()
             }
@@ -103,7 +109,9 @@ class FilterFragment : Fragment() {
             val adapter = FilterAdapter(context!!, filterDB.actions, true, "action_type")
             val builder = AlertDialog.Builder(context)
             builder.setTitle("Action Type")
-            builder.setView(DialogRecyclerView(context!!, adapter))
+            val recyclerView = DialogRecyclerView(context!!)
+            recyclerView.setAdapter(adapter)
+            builder.setView(recyclerView)
             builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 dialog.dismiss()
             }
@@ -116,22 +124,23 @@ class FilterFragment : Fragment() {
     }
 
     private fun updateButtonText() {
-        val category = prefs?.getString("category", "")
+        val prefs = context?.getSharedPreferences("cmarms", Context.MODE_PRIVATE)!!
+        val category : String = prefs!!.getString("category", "")!!
         var defaultCategoryStr = getString(R.string.select_category)
-        if(category!!.isNotEmpty())
+        if(category.isNotEmpty())
             defaultCategoryStr = "${getString(R.string.select_category)}\n$category"
 
         filter_category.text = defaultCategoryStr
 
-        val firearmType = prefs?.getString("firearm_type", "")
+        val firearmType = prefs!!.getString("firearm_type", "")!!
         var defaultFirearmType = getString(R.string.select_firearm_type)
-        if(firearmType!!.isNotEmpty())
+        if(firearmType.isNotEmpty())
             defaultFirearmType = "${getString(R.string.select_firearm_type)}\n$firearmType"
         filter_firearm_type.text = defaultFirearmType
 
-        val actionType = prefs?.getString("action_type", "")
+        val actionType = prefs!!.getString("action_type", "")!!
         var defaultActionType = getString(R.string.select_action_type)
-        if(actionType!!.isNotEmpty())
+        if(actionType.isNotEmpty())
             defaultActionType = "${getString(R.string.select_action_type)}\n$actionType"
         filter_action_type.text = defaultActionType
     }
@@ -145,12 +154,12 @@ class FilterFragment : Fragment() {
     fun onFilterChange(filter : Filter) {
 //        Snackbar.make(filter_list, "${filter.value} was changed", Snackbar.LENGTH_SHORT)
         GlobalScope.launch {
-            if(prefs!!.getBoolean("", false)){
+            val prefs = context?.getSharedPreferences("cmarms", Context.MODE_PRIVATE)!!
+            if(prefs!!.getBoolean(filter.value, false)){
                 viewModel.query.filters[filter.value] = filter
             } else {
                 viewModel.query.filters.remove(filter.value)
             }
         }
     }
-
 }
