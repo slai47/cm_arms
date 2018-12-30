@@ -47,7 +47,7 @@ class FeedFragment : Fragment() {
 
         if(viewModel.getPosts().isNullOrEmpty()){
             feed_progress.visibility = View.VISIBLE
-            presenter.searchForPosts(viewModel.query)
+            presenter.searchForPosts(viewModel.query, viewModel.getPostIds())
         } else {
             feed_progress.visibility = View.GONE
         }
@@ -60,9 +60,9 @@ class FeedFragment : Fragment() {
                     viewModel.clearPosts()
                     adapter.clearPosts()
                     presenter.dispose()
-                    feed_progress.visibility = View.VISIBLE
-                    presenter.searchForPosts(viewModel.query)
+                    presenter.searchForPosts(viewModel.query, viewModel.getPostIds())
                 }
+                feed_progress.visibility = View.VISIBLE
             }
         }
     }
@@ -80,9 +80,11 @@ class FeedFragment : Fragment() {
 
         val listener = object : EndlessRecyclerViewScrollListener(manager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                viewModel.query.page++
-                feed_progress.visibility = View.VISIBLE
-                presenter.searchForPosts(viewModel.query)
+                if(!viewModel.endOfQueue) {
+                    viewModel.query.page++
+                    feed_progress.visibility = View.VISIBLE
+                    presenter.searchForPosts(viewModel.query, viewModel.getPostIds())
+                }
             }
         }
         feed_recycler.addOnScrollListener(listener)
@@ -98,9 +100,10 @@ class FeedFragment : Fragment() {
     fun onPostsReceived(list : ArrayList<Post>) {
         if(!list.isEmpty())
             viewModel.addPosts(list)
-        else if(list.isEmpty() && adapter.posts.isNotEmpty())
+        else if(list.isEmpty() && adapter.posts.isNotEmpty()) {
             Snackbar.make(feed_recycler, "No more items", Snackbar.LENGTH_SHORT)
-        else
+            viewModel.endOfQueue = true
+        } else
             Snackbar.make(feed_recycler, "Failed to grab data", Snackbar.LENGTH_SHORT)
 
         feed_progress.visibility = View.GONE

@@ -63,9 +63,9 @@ class FilterFragment : Fragment() {
         filter_category.setOnClickListener {
             val adapter = FilterAdapter(context!!, filterDB.categories, true, "category")
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("Categories")
+            builder.setTitle(getString(R.string.categories_title))
             builder.setView(DialogRecyclerView(context!!, adapter))
-            builder.setPositiveButton("Ok") { dialog, which ->
+            builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 dialog.dismiss()
             }
             builder.show()
@@ -73,9 +73,9 @@ class FilterFragment : Fragment() {
         filter_caliber.setOnClickListener {
             val adapter = FilterAdapter(context!!, filterDB.calibers)
             val builder = AlertDialog.Builder(context)
-            builder.setTitle("Calibers")
+            builder.setTitle(getString(R.string.caliber_title))
             builder.setView(DialogRecyclerView(context!!, adapter))
-            builder.setPositiveButton("Ok") { dialog, which ->
+            builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 dialog.dismiss()
             }
             builder.show()

@@ -6,15 +6,12 @@ import com.slai.cmarms.interfaces.IArmsService
 import com.slai.cmarms.interfaces.IPresenter
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.Query
-import com.slai.cmarms.model.SaleType
 import kotlinx.coroutines.*
 import me.toptas.rssconverter.RssFeed
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.R.attr.x
 import me.toptas.rssconverter.RssItem
-import java.util.regex.Pattern
 
 
 class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
@@ -22,11 +19,14 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
     val job = Job()
     val scope = CoroutineScope(Dispatchers.IO + job)
 
-    fun searchForPosts(query : Query) {
+    fun searchForPosts(
+        query: Query,
+        posts: ArrayList<Long>
+    ) {
         val api = IArmsService.getService()
         // launch coroutines
         scope.launch {
-            var url = "http://www.armslist.com/feed.rss/" + query.getURLExtras()
+            val url = "http://www.armslist.com/feed.rss/" + query.getURLExtras()
             val request = api.getPosts(url)
             request.enqueue(object : Callback<RssFeed> {
                 override fun onFailure(call: Call<RssFeed>, t: Throwable) {
@@ -41,7 +41,8 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
                         for (it in response.body()?.items!!) {
                             Log.d(FeedPresenter::class.java.simpleName,"${it.title}")
                             val post = parsePost(it)
-                            list.add(post)
+                            if(!posts.contains(post.id))
+                                list.add(post)
                         }
                     }
                     scope.launch(Dispatchers.Main) {

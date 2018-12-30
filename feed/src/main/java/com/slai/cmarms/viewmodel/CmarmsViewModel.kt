@@ -12,6 +12,7 @@ class CmarmsViewModel : ViewModel() {
     private lateinit var posts : ArrayList<Post> // adding this to allow use of MVVM and prevent dups
     private lateinit var livePosts : MutableLiveData<ArrayList<Post>>
     val query by lazy { Query() }
+    var endOfQueue = false
 
     fun getLivePosts() : LiveData<ArrayList<Post>> {
         if(!::livePosts.isInitialized){
@@ -50,5 +51,14 @@ class CmarmsViewModel : ViewModel() {
     fun clearPosts() {
         posts.clear()
         livePosts.value?.clear()
+        endOfQueue = false
+    }
+
+    fun getPostIds() : ArrayList<Long> {
+        val list = ArrayList<Long>()
+        for(post in posts){
+            list.add(post.id)
+        }
+        return list
     }
 }
