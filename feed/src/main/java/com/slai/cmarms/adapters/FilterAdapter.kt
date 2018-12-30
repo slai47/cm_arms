@@ -16,6 +16,17 @@ class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : Recyc
     constructor(context: Context, array: ArrayList<Filter>, singular: Boolean, prefName : String) : this(context, array) {
         singleOnly = singular
         storedPrefName = prefName
+        selectedValue = prefs.getString(prefName, "")
+        if(selectedValue.isNotEmpty()) {
+            var i = 0
+            for (filter in array) {
+                if (selectedValue == filter.value) {
+                    break
+                }
+                i++
+            }
+            previousSelection = i
+        }
     }
 
     var singleOnly = false
@@ -45,7 +56,7 @@ class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : Recyc
         holder.check.setOnCheckedChangeListener { buttonView, isChecked ->
             val pos = buttonView.tag as Int
             val filter = array[pos]
-            if(singleOnly) {
+            if(!singleOnly) {
                 prefs.edit().putBoolean(filter.value, isChecked).apply()
                 EventBus.getDefault().post(filter)
             } else {

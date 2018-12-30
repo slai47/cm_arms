@@ -33,7 +33,7 @@ class FilterFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
-        viewModel = ViewModelProviders.of(this).get(CmarmsViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java)
 
         setupDialogs()
 
@@ -68,6 +68,9 @@ class FilterFragment : Fragment() {
             builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 dialog.dismiss()
             }
+            builder.setOnDismissListener {
+                updateButtonText()
+            }
             builder.show()
         }
         filter_caliber.setOnClickListener {
@@ -78,12 +81,59 @@ class FilterFragment : Fragment() {
             builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 dialog.dismiss()
             }
+            builder.setOnDismissListener {
+                updateButtonText()
+            }
             builder.show()
         }
+        filter_firearm_type.setOnClickListener {
+            val adapter = FilterAdapter(context!!, filterDB.firearmTypes, true, "firearm_type")
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Firearm Type")
+            builder.setView(DialogRecyclerView(context!!, adapter))
+            builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                dialog.dismiss()
+            }
+            builder.setOnDismissListener {
+                updateButtonText()
+            }
+            builder.show()
+        }
+        filter_action_type.setOnClickListener {
+            val adapter = FilterAdapter(context!!, filterDB.actions, true, "action_type")
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Action Type")
+            builder.setView(DialogRecyclerView(context!!, adapter))
+            builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                dialog.dismiss()
+            }
+            builder.setOnDismissListener {
+                updateButtonText()
+            }
+            builder.show()
+        }
+
     }
 
     private fun updateButtonText() {
+        val category = prefs?.getString("category", "")
+        var defaultCategoryStr = getString(R.string.select_category)
+        if(category!!.isNotEmpty())
+            defaultCategoryStr = "${getString(R.string.select_category)}\n$category"
 
+        filter_category.text = defaultCategoryStr
+
+        val firearmType = prefs?.getString("firearm_type", "")
+        var defaultFirearmType = getString(R.string.select_firearm_type)
+        if(firearmType!!.isNotEmpty())
+            defaultFirearmType = "${getString(R.string.select_firearm_type)}\n$firearmType"
+        filter_firearm_type.text = defaultFirearmType
+
+        val actionType = prefs?.getString("action_type", "")
+        var defaultActionType = getString(R.string.select_action_type)
+        if(actionType!!.isNotEmpty())
+            defaultActionType = "${getString(R.string.select_action_type)}\n$actionType"
+        filter_action_type.text = defaultActionType
     }
 
     override fun onPause() {

@@ -115,17 +115,38 @@
             <Button
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_default="percent"
+                    android:id="@+id/filter_action_type"
+                    android:text="@string/select_action_type"
+                    app:layout_constraintTop_toBottomOf="@id/filter_caliber"
+                    style="@style/ArmsTransparentButton"
+            />
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/filter_caliber"
+                    android:id="@+id/filter_firearm_type"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintWidth_default="percent"
+                    android:text="@string/select_firearm_type"
+                    app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+                    style="@style/ArmsTransparentButton"
+            />
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/filter_search"
                     app:layout_constraintWidth_percent="0.45"
                     app:layout_constraintWidth_default="percent"
-                    app:layout_constraintTop_toBottomOf="@id/filter_caliber"
+                    app:layout_constraintTop_toBottomOf="@id/filter_firearm_type"
                     android:text="@string/search"
                     app:layout_constraintStart_toEndOf="@id/guidelineLeft"
                     style="@style/ArmsRegularButton"
             />
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </ScrollView>
