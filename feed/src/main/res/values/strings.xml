@@ -17,4 +17,6 @@
     <string name="ok">Ok</string>
     <string name="caliber_title">Calibers</string>
     <string name="categories_title">Categories</string>
+    <string name="select_action_type">Select Action Type</string>
+    <string name="select_firearm_type">Select Firearm Type</string>
 </resources>
