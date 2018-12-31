@@ -3,16 +3,16 @@ package com.slai.cmarms.viewmodel
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.Query
 
-class CmarmsViewModel : ViewModel() {
+class CmarmsViewModel {
 
     private lateinit var posts : ArrayList<Post> // adding this to allow use of MVVM and prevent dups
     private lateinit var livePosts : MutableLiveData<ArrayList<Post>>
     val query by lazy { Query() }
     var endOfQueue = false
+
 
     fun getLivePosts() : LiveData<ArrayList<Post>> {
         if(!::livePosts.isInitialized){
@@ -35,10 +35,11 @@ class CmarmsViewModel : ViewModel() {
         }
     }
 
+    /**
+     * This is reseting of the prefences
+     */
     suspend fun reset(context : Context){
-        if(::livePosts.isInitialized){
-            livePosts.value = ArrayList()
-        }
+
         val pref = context.getSharedPreferences("cmarms", Context.MODE_PRIVATE)
         val edit = pref.edit()
         for((title, filter) in query.filters){
@@ -50,7 +51,9 @@ class CmarmsViewModel : ViewModel() {
 
     fun clearPosts() {
         posts.clear()
-        livePosts.value?.clear()
+        if(::livePosts.isInitialized){
+            livePosts.value = ArrayList()
+        }
         endOfQueue = false
     }
 

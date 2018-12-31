@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.cmarms.R
+import com.slai.cmarms.Utils
 import com.slai.cmarms.model.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -16,10 +17,10 @@ import org.greenrobot.eventbus.EventBus
 
 class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : RecyclerView.Adapter<FilterViewHolder>() {
 
-    constructor(context: Context, array: ArrayList<Filter>, singular: Boolean, prefName : String) : this(context, array) {
-        singleOnly = singular
+    constructor(context: Context, array: ArrayList<Filter>, prefName : String) : this(context, array) {
+        singleOnly = true
         storedPrefName = prefName
-        selectedValue = prefs.getString(prefName, "")
+        selectedValue = prefs.getString(prefName, "")!!
         if(selectedValue.isNotEmpty()) {
             var i = 0
             for (filter in array) {
@@ -35,7 +36,7 @@ class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : Recyc
     var singleOnly = false
     var storedPrefName = ""
 
-    val prefs : SharedPreferences = context.getSharedPreferences("cmarms", Context.MODE_PRIVATE)
+    val prefs : SharedPreferences = context.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)
 
     var selectedValue = ""
     var previousSelection = 0
@@ -55,22 +56,36 @@ class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : Recyc
         holder.check.isChecked =
                 if(!singleOnly) prefs.getBoolean(filter.value, false)
                 else filter.value == selectedValue
-        holder.check.tag = position
-        holder.check.setOnCheckedChangeListener { buttonView, isChecked ->
-            val pos = buttonView.tag as Int
+        holder.itemView.tag = position
+
+        holder.itemView.setOnClickListener {
+            val pos = it.tag as Int
             val filter = array[pos]
-            if(!singleOnly) {
-                prefs.edit().putBoolean(filter.value, isChecked).apply()
-                EventBus.getDefault().post(filter)
-            } else {
-                selectedValue = filter.value
-                prefs.edit().putString(storedPrefName, filter.value).commit()
-                GlobalScope.launch(Dispatchers.Main) {
-                    notifyItemChanged(previousSelection)
-                    notifyItemChanged(pos)
-                    previousSelection = pos
+            val preference = if(!singleOnly) filter.value
+                                    else storedPrefName
+            if(singleOnly) {
+                val value = prefs.getString(preference,"")
+                if(value != filter.value) {
+                    prefs.edit().putString(preference, filter.value).apply()
+                    selectedValue = filter.value
+                    GlobalScope.launch(Dispatchers.Main) {
+                        notifyItemChanged(previousSelection)
+                        notifyItemChanged(pos)
+                        previousSelection = pos
+                    }
+                } else {
+                    prefs.edit().putString(preference, "").apply()
+                    holder.check.isChecked = false
+                    selectedValue = ""
+                    previousSelection = -1
                 }
+            } else {
+                var value = prefs.getBoolean(preference,false)
+                value = !value
+                holder.check.isChecked = value
+                prefs.edit().putBoolean(preference, value).apply()
             }
+            EventBus.getDefault().post(filter)
         }
     }
 }

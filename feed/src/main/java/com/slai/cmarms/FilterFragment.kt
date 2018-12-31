@@ -1,6 +1,5 @@
 package com.slai.cmarms
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,11 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.slai.cmarms.adapters.FilterAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.model.Filter
-import com.slai.cmarms.view.DialogRecyclerView
+import com.slai.cmarms.model.NavigationEvent
+import com.slai.cmarms.model.NavigationTransitionEvent
+import com.slai.cmarms.presenters.FilterPresenter
 import com.slai.cmarms.viewmodel.CmarmsViewModel
-import kotlinx.android.synthetic.main.fragment_filter.*
+import kotlinx.android.synthetic.main.fragment_nav.*
+import kotlinx.android.synthetic.main.snippet_filter.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -20,10 +23,8 @@ import org.greenrobot.eventbus.Subscribe
 
 class FilterFragment : Fragment() {
 
-    lateinit var viewModel : CmarmsViewModel
-
-    private val filterDB = FiltersDataHolder()
-
+    val viewModel : CmarmsViewModel by lazy { CmarmsViewModel.getInstance() }
+    private val presenter = FilterPresenter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_filter, container, false)
@@ -32,113 +33,89 @@ class FilterFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
-        viewModel = ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java)
 
-        setupDialogs()
+        presenter.setupDialogs(context!!, filter_category, filter_caliber, filter_firearm_type, filter_action_type)
 
+        setupSearchReset()
+        fillQueryEditTexts()
+        updateButtonText()
+    }
+
+    private fun fillQueryEditTexts() {
+        if(viewModel.query.search.isNotEmpty()){
+            filter_search_text.setText(viewModel.query.search.replace("+", " "))
+        }
+        if(viewModel.query.location.isNotEmpty()){
+            filter_search_text.setText(viewModel.query.search)
+        }
+        if(viewModel.query.lowPrice != 0){
+            filter_search_text.setText("${viewModel.query.lowPrice}")
+        }
+        if(viewModel.query.highPrice != 0){
+            filter_search_text.setText("${viewModel.query.highPrice}")
+        }
+    }
+
+    private fun setupSearchReset() {
         filter_search.setOnClickListener {
-            val search = filter_search_text.text.toString().trim()
-            val lowPrice = filter_low_price.text.toString().trim()
-            val highPrice = filter_high_price.text.toString().trim()
-            val location = filter_location.text.toString().trim()
+            setViewModelItems()
+            viewModel.clearPosts()
+            EventBus.getDefault().post(NavigationTransitionEvent(NavigationEvent.FEED))
+        }
+        filter_reset.setOnClickListener {
+            GlobalScope.launch(Dispatchers.IO) {
+                viewModel.reset(context!!)
+            }
+            viewModel.clearPosts()
+            val prefs = context?.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
+            prefs.edit().remove(Utils.PREF_CATEGORY).remove(Utils.PREF_ACTION_TYPE).remove(Utils.PREF_FIREARM_TYPE).apply()
+            updateButtonText()
+            filter_search_text.text = null
+            filter_location.text = null
+            filter_low_price.text = null
+            filter_high_price.text = null
+        }
+    }
 
+    private fun setViewModelItems() {
+        val search = filter_search_text.text.toString().trim().replace(" ", "+")
+        val lowPrice = filter_low_price.text.toString().trim()
+        val highPrice = filter_high_price.text.toString().trim()
+        val location = filter_location.text.toString().trim()
+
+        if(location.isNotEmpty())
             viewModel.query.location = location
+        if(location.isNotEmpty())
             viewModel.query.search = search
 
-            try {
-                viewModel.query.lowPrice = lowPrice.toInt()
-            } catch (e: Exception) {
-                // show error
-            }
-            try {
-                viewModel.query.highPrice = highPrice.toInt()
-            } catch (e: Exception) {
-                // show error
-            }
-
+        try {
+            viewModel.query.lowPrice = lowPrice.toInt()
+        } catch (e: Exception) {
+            // show error
+        }
+        try {
+            viewModel.query.highPrice = highPrice.toInt()
+        } catch (e: Exception) {
+            // show error
         }
     }
 
-    private fun setupDialogs() {
-        filter_category.setOnClickListener {
-            val adapter = FilterAdapter(context!!, filterDB.categories, true, "category")
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(getString(R.string.categories_title))
-            val recyclerView = DialogRecyclerView(context!!)
-            recyclerView.setAdapter(adapter)
-            builder.setView(recyclerView)
-            builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
-                dialog.dismiss()
-            }
-            builder.setOnDismissListener {
-                updateButtonText()
-            }
-            builder.show()
-        }
-        filter_caliber.setOnClickListener {
-            val adapter = FilterAdapter(context!!, filterDB.calibers)
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(getString(R.string.caliber_title))
-            val recyclerView = DialogRecyclerView(context!!)
-            recyclerView.setAdapter(adapter)
-            builder.setView(recyclerView)
-            builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
-                dialog.dismiss()
-            }
-            builder.setOnDismissListener {
-                updateButtonText()
-            }
-            builder.show()
-        }
-        filter_firearm_type.setOnClickListener {
-            val adapter = FilterAdapter(context!!, filterDB.firearmTypes, true, "firearm_type")
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle("Firearm Type")
-            val recyclerView = DialogRecyclerView(context!!)
-            recyclerView.setAdapter(adapter)
-            builder.setView(recyclerView)
-            builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
-                dialog.dismiss()
-            }
-            builder.setOnDismissListener {
-                updateButtonText()
-            }
-            builder.show()
-        }
-        filter_action_type.setOnClickListener {
-            val adapter = FilterAdapter(context!!, filterDB.actions, true, "action_type")
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle("Action Type")
-            val recyclerView = DialogRecyclerView(context!!)
-            recyclerView.setAdapter(adapter)
-            builder.setView(recyclerView)
-            builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
-                dialog.dismiss()
-            }
-            builder.setOnDismissListener {
-                updateButtonText()
-            }
-            builder.show()
-        }
-
-    }
-
-    private fun updateButtonText() {
-        val prefs = context?.getSharedPreferences("cmarms", Context.MODE_PRIVATE)!!
-        val category : String = prefs!!.getString("category", "")!!
+    fun updateButtonText() {
+        val prefs = context?.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
+        val category : String = prefs!!.getString(Utils.PREF_CATEGORY, "")!!
         var defaultCategoryStr = getString(R.string.select_category)
         if(category.isNotEmpty())
             defaultCategoryStr = "${getString(R.string.select_category)}\n$category"
 
         filter_category.text = defaultCategoryStr
 
-        val firearmType = prefs!!.getString("firearm_type", "")!!
+        val firearmType = prefs!!.getString(Utils.PREF_FIREARM_TYPE, "")!!
         var defaultFirearmType = getString(R.string.select_firearm_type)
         if(firearmType.isNotEmpty())
             defaultFirearmType = "${getString(R.string.select_firearm_type)}\n$firearmType"
         filter_firearm_type.text = defaultFirearmType
 
-        val actionType = prefs!!.getString("action_type", "")!!
+        val actionType = prefs!!.getString(Utils.PREF_ACTION_TYPE, "")!!
         var defaultActionType = getString(R.string.select_action_type)
         if(actionType.isNotEmpty())
             defaultActionType = "${getString(R.string.select_action_type)}\n$actionType"
@@ -147,15 +124,17 @@ class FilterFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        setViewModelItems()
         EventBus.getDefault().unregister(this)
+        presenter.dispose()
     }
 
     @Subscribe
     fun onFilterChange(filter : Filter) {
-//        Snackbar.make(filter_list, "${filter.value} was changed", Snackbar.LENGTH_SHORT)
+        val snack = Snackbar.make(nav_container, "${filter.value} was changed", Snackbar.LENGTH_SHORT).show()
         GlobalScope.launch {
-            val prefs = context?.getSharedPreferences("cmarms", Context.MODE_PRIVATE)!!
-            if(prefs!!.getBoolean(filter.value, false)){
+            val prefs = context?.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
+            if(prefs.getBoolean(filter.value, false)){
                 viewModel.query.filters[filter.value] = filter
             } else {
                 viewModel.query.filters.remove(filter.value)

@@ -6,8 +6,7 @@
                                                    android:orientation="vertical"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="wrap_content"
-                                                   android:layout_margin="8dp"
-
+                                                   android:layout_margin="16dp"
 >
 
     <LinearLayout android:layout_width="wrap_content"
@@ -19,9 +18,10 @@
         <TextView
                 android:text=""
                 tools:text="Pocket Knives"
-                app:layout_constraintWidth_default="wrap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/PrimaryText"
+                app:layout_constraintWidth_default="wrap"
                 android:id="@+id/list_feed_title"
                 android:maxLines="2"
         />
@@ -32,11 +32,12 @@
                 app:layout_constraintWidth_default="wrap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/SecondaryText"
                 android:id="@+id/list_feed_location"
                 android:maxLines="1"
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="8dp"
         />
     </LinearLayout>
 
@@ -52,6 +53,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="8dp"
+            style="@style/PrimaryText"
     />
 
 </RelativeLayout>

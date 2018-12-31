@@ -27,6 +27,7 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
         // launch coroutines
         scope.launch {
             val url = "http://www.armslist.com/feed.rss/" + query.getURLExtras()
+            Log.d("FeedPresenter", "$url")
             val request = api.getPosts(url)
             request.enqueue(object : Callback<RssFeed> {
                 override fun onFailure(call: Call<RssFeed>, t: Throwable) {
@@ -61,7 +62,8 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
         if(titleEndIndex < 0) // check if the offer isn't there.
             titleEndIndex = fullTitle.length
 
-        val simpleTitle = fullTitle.substring(fullTitle.indexOf(")") + 1, titleEndIndex - 1).trim()
+
+        val simpleTitle = fullTitle.substring(fullTitle.indexOf(")") + 1, titleEndIndex - 1).trim().replace("-", "")
 
         val post = Post(simpleTitle)
         post.description = it.description.toString()

@@ -19,4 +19,7 @@
     <string name="categories_title">Categories</string>
     <string name="select_action_type">Select Action Type</string>
     <string name="select_firearm_type">Select Firearm Type</string>
+    <string name="firearm_type_title">Firearm Type</string>
+    <string name="action_type_title">Action Type</string>
+    <string name="reset">Reset</string>
 </resources>

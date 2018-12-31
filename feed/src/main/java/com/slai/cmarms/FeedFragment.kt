@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 class FeedFragment : Fragment() {
 
     val presenter: FeedPresenter by lazy { FeedPresenter(this) }
-    private val viewModel: CmarmsViewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
+    private val viewModel: CmarmsViewModel by lazy { CmarmsViewModel.getInstance() }
 
     lateinit var adapter : FeedAdapter
     lateinit var manager : LinearLayoutManager

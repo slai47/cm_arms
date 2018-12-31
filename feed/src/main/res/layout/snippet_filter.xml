@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:id="@+id/filter_overall"
+    >
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+        >
+            <!-- Search -->
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                                                                   android:layout_height="wrap_content"
+                                                                   android:id="@+id/filter_input_search"
+            >
+                <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
+                                                                         android:layout_height="wrap_content"
+                                                                         android:id="@+id/filter_search_text"
+                                                                         android:hint="@string/search_keyword"
+                                                                         android:inputType="text|textCapWords"
+                />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- location -->
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                                                                   android:layout_height="wrap_content"
+                                                                   android:id="@+id/filter_input_location"
+                                                                   app:layout_constraintTop_toBottomOf="@id/filter_input_search"
+            >
+                <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
+                                                                         android:layout_height="wrap_content"
+                                                                         android:id="@+id/filter_location"
+                                                                         android:hint="@string/location"
+                                                                         android:inputType="text|textCapWords"
+                />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Prices -->
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp"
+                                                                   android:layout_height="wrap_content"
+                                                                   android:id="@+id/filter_input_low_price"
+                                                                   app:layout_constraintTop_toBottomOf="@id/filter_input_location"
+                                                                   app:layout_constraintWidth_percent="0.45"
+                                                                   app:layout_constraintStart_toStartOf="parent"
+                                                                   app:layout_constraintWidth_default="percent"
+            >
+                <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
+                                                                         android:layout_height="wrap_content"
+                                                                         android:id="@+id/filter_low_price"
+                                                                         android:hint="@string/low_price"
+                                                                         android:inputType="number"
+                />
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.55" />
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp"
+                                                                   android:layout_height="wrap_content"
+                                                                   android:id="@+id/filter_input_high_price"
+                                                                   app:layout_constraintTop_toBottomOf="@id/filter_input_location"
+                                                                   app:layout_constraintWidth_percent="0.45"
+                                                                   app:layout_constraintWidth_default="percent"
+                                                                   app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+                                                                   android:inputType="number"
+            >
+                <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
+                                                                         android:layout_height="wrap_content"
+                                                                         android:id="@+id/filter_high_price"
+                                                                         android:hint="@string/high_price"
+                />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_default="percent"
+                    android:id="@+id/filter_category"
+                    android:text="@string/select_category"
+                    app:layout_constraintTop_toBottomOf="@id/filter_input_high_price"
+                    style="@style/ArmsTransparentButton"
+            />
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/filter_input_high_price"
+                    android:id="@+id/filter_caliber"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintWidth_default="percent"
+                    android:text="@string/select_calibers"
+                    app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+                    style="@style/ArmsTransparentButton"
+            />
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_default="percent"
+                    android:id="@+id/filter_action_type"
+                    android:text="@string/select_action_type"
+                    app:layout_constraintTop_toBottomOf="@id/filter_caliber"
+                    style="@style/ArmsTransparentButton"
+            />
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/filter_caliber"
+                    android:id="@+id/filter_firearm_type"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintWidth_default="percent"
+                    android:text="@string/select_firearm_type"
+                    app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+                    style="@style/ArmsTransparentButton"
+            />
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_default="percent"
+                    android:id="@+id/filter_reset"
+                    android:text="@string/reset"
+                    app:layout_constraintTop_toBottomOf="@id/filter_firearm_type"
+                    style="@style/ArmsRegularButton"
+            />
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/filter_search"
+                    app:layout_constraintWidth_percent="0.45"
+                    app:layout_constraintWidth_default="percent"
+                    app:layout_constraintTop_toBottomOf="@id/filter_firearm_type"
+                    android:text="@string/search"
+                    app:layout_constraintStart_toEndOf="@id/guidelineLeft"
+                    style="@style/ArmsRegularButton"
+            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</ScrollView>

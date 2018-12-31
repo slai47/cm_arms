@@ -117,6 +117,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDebugFeatureClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/compatible_screen_manifest" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/consumer_proguard_file" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/density_or_language_packaged_split" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/feature_classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/feature_set_metadata" />
