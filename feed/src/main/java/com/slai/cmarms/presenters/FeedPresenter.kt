@@ -70,6 +70,9 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
         post.location = fullTitle.substring(fullTitle.indexOf("(") + 1, fullTitle.indexOf(")")).trim()
         post.price = fullTitle.substring(titleEndIndex + 1, fullTitle.length).trim()
 
+        if(post.price.contains("offer", false))
+            post.price = "Offer"
+
         if(post.url.isNotEmpty()){
             post.id = post.url.replace("http://www.armslist.com/posts/", "").toLong()
         }

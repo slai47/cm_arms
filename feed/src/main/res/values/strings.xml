@@ -22,4 +22,5 @@
     <string name="firearm_type_title">Firearm Type</string>
     <string name="action_type_title">Action Type</string>
     <string name="reset">Reset</string>
+    <string name="offer">Offer</string>
 </resources>

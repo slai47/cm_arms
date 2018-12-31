@@ -22,6 +22,7 @@
             <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
                                                                    android:layout_height="wrap_content"
                                                                    android:id="@+id/filter_input_search"
+                                                                   android:theme="@style/TextInputLayoutAppearance"
             >
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
                                                                          android:layout_height="wrap_content"
@@ -37,6 +38,7 @@
                                                                    android:layout_height="wrap_content"
                                                                    android:id="@+id/filter_input_location"
                                                                    app:layout_constraintTop_toBottomOf="@id/filter_input_search"
+                                                                   android:theme="@style/TextInputLayoutAppearance"
             >
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
                                                                          android:layout_height="wrap_content"
@@ -55,6 +57,7 @@
                                                                    app:layout_constraintWidth_percent="0.45"
                                                                    app:layout_constraintStart_toStartOf="parent"
                                                                    app:layout_constraintWidth_default="percent"
+                                                                   android:theme="@style/TextInputLayoutAppearance"
             >
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
                                                                          android:layout_height="wrap_content"
@@ -78,6 +81,7 @@
                                                                    app:layout_constraintWidth_default="percent"
                                                                    app:layout_constraintStart_toEndOf="@id/guidelineLeft"
                                                                    android:inputType="number"
+                                                                   android:theme="@style/TextInputLayoutAppearance"
             >
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
                                                                          android:layout_height="wrap_content"

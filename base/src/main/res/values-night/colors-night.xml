@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="background">#000</color>
-    <color name="textPrimary">#FDFDFD</color>
+    <color name="background">#19100e</color>
+    <color name="textPrimary">#CDCDCD</color>
     <color name="textSecondary">#ABABAB</color>
+
+    <color name="divider">#565656</color>
+    <color name="icon_color">#CCC</color>
+    <color name="bottom_navigation_background">#2d1e1a</color>
 </resources>

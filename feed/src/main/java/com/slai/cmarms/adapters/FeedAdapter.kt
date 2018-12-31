@@ -29,7 +29,10 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         val current = posts.get(position)
         holder.title.text = current.title
-        holder.cost.text = "$${current.price}"
+
+        if(!current.price.contains("offer", true)) holder.cost.text = "$${current.price}"
+        else holder.cost.text = holder.itemView.context.getString(R.string.offer)
+
         holder.location.text = current.location
 
         holder.view.tag = position

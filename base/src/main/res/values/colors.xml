@@ -13,4 +13,10 @@
     <color name="buttonText">#EFEFEF</color>
 
     <color name="transparent">#00000000</color>
+
+    <color name="icon_color">#FF000000</color>
+
+    <color name="bottom_navigation_background">#DDD</color>
+
+    <color name="red">#ffff0000</color>
 </resources>
