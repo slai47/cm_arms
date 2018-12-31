@@ -1,6 +1,7 @@
 apply plugin: 'com.android.feature'
 
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -37,4 +38,12 @@ dependencies {
 
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    def room_version = "2.1.0-alpha03"
+
+    api "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version" // use kapt for Kotlin
+    api "androidx.room:room-coroutines:$room_version"
+
+
 }

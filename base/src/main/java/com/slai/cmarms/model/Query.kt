@@ -40,6 +40,7 @@ data class Query(var search : String = "") {
                 builder.append("&tag=$va")
             }
         }
+        builder.append("&posttype=7")
         return builder.toString()
     }
 

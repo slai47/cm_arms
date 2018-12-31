@@ -1,6 +1,7 @@
 package com.slai.cmarms
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +24,8 @@ import kotlinx.coroutines.launch
 
 class FeedFragment : Fragment() {
 
+    val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
     val presenter: FeedPresenter by lazy { FeedPresenter(this) }
-    private val viewModel: CmarmsViewModel by lazy { CmarmsViewModel.getInstance() }
 
     lateinit var adapter : FeedAdapter
     lateinit var manager : LinearLayoutManager
@@ -40,14 +41,15 @@ class FeedFragment : Fragment() {
 
         viewModel.getLivePosts().observe(this, Observer {
             // Update UI
+            Log.d(FeedFragment::class.java.simpleName, "Live Data updated size = ${it.size}")
             adapter.addPosts(it)
         })
 
         setupSwipeToRefresh()
 
-        if(viewModel.getPosts().isNullOrEmpty()){
+        if(viewModel.getLivePosts().value.isNullOrEmpty()){
             feed_progress.visibility = View.VISIBLE
-            presenter.searchForPosts(viewModel.query, viewModel.getPostIds())
+            presenter.searchForPosts(viewModel.query)
         } else {
             feed_progress.visibility = View.GONE
         }
@@ -60,7 +62,7 @@ class FeedFragment : Fragment() {
                     viewModel.clearPosts()
                     adapter.clearPosts()
                     presenter.dispose()
-                    presenter.searchForPosts(viewModel.query, viewModel.getPostIds())
+                    presenter.searchForPosts(viewModel.query)
                 }
                 feed_progress.visibility = View.VISIBLE
             }
@@ -83,7 +85,7 @@ class FeedFragment : Fragment() {
                 if(!viewModel.endOfQueue) {
                     viewModel.query.page++
                     feed_progress.visibility = View.VISIBLE
-                    presenter.searchForPosts(viewModel.query, viewModel.getPostIds())
+                    presenter.searchForPosts(viewModel.query)
                 }
             }
         }
@@ -101,10 +103,10 @@ class FeedFragment : Fragment() {
         if(!list.isEmpty())
             viewModel.addPosts(list)
         else if(list.isEmpty() && adapter.posts.isNotEmpty()) {
-            Snackbar.make(feed_recycler, "No more items", Snackbar.LENGTH_SHORT)
+            Snackbar.make(feed_recycler, "No more items", Snackbar.LENGTH_SHORT).show()
             viewModel.endOfQueue = true
         } else
-            Snackbar.make(feed_recycler, "Failed to grab data", Snackbar.LENGTH_SHORT)
+            Snackbar.make(feed_recycler, "Failed to grab data", Snackbar.LENGTH_SHORT). show()
 
         feed_progress.visibility = View.GONE
     }

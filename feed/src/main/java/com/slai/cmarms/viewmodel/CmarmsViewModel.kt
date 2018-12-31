@@ -1,37 +1,45 @@
 package com.slai.cmarms.viewmodel
 
+import android.app.Application
 import android.content.Context
+import android.provider.Settings
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.room.Room
+import com.slai.cmarms.db.AppDatabase
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.Query
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class CmarmsViewModel {
+class CmarmsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private lateinit var posts : ArrayList<Post> // adding this to allow use of MVVM and prevent dups
-    private lateinit var livePosts : MutableLiveData<ArrayList<Post>>
-    val query by lazy { Query() }
+    private lateinit var livePosts : LiveData<MutableList<Post>>
+    val query = Query()
     var endOfQueue = false
+    lateinit var appDatabase: AppDatabase
 
 
-    fun getLivePosts() : LiveData<ArrayList<Post>> {
+    init {
+        appDatabase = Room.inMemoryDatabaseBuilder(application.applicationContext, AppDatabase::class.java).build()
+    }
+
+    fun getLivePosts() : LiveData<MutableList<Post>> {
         if(!::livePosts.isInitialized){
             livePosts = MutableLiveData()
-            livePosts.value = ArrayList()
-            posts = ArrayList()
+            livePosts = appDatabase.postDao().loadLivePosts()
         }
         return livePosts
     }
 
-    fun getPosts() : ArrayList<Post> {
-        getLivePosts()
-        return posts
-    }
-
-    fun addPosts(newPosts : ArrayList<Post>) {
-        if(::livePosts.isInitialized){
-            posts.addAll(newPosts)
-            livePosts.value = newPosts
+    fun addPosts( newPosts : ArrayList<Post>) {
+        GlobalScope.launch( Dispatchers.IO) {
+            for(post in newPosts) {
+                appDatabase.postDao().insertPost(post)
+            }
         }
     }
 
@@ -39,7 +47,6 @@ class CmarmsViewModel {
      * This is reseting of the prefences
      */
     suspend fun reset(context : Context){
-
         val pref = context.getSharedPreferences("cmarms", Context.MODE_PRIVATE)
         val edit = pref.edit()
         for((title, filter) in query.filters){
@@ -50,18 +57,10 @@ class CmarmsViewModel {
     }
 
     fun clearPosts() {
-        posts.clear()
-        if(::livePosts.isInitialized){
-            livePosts.value = ArrayList()
+        GlobalScope.launch(Dispatchers.IO) {
+            appDatabase.postDao().nukePosts()
         }
         endOfQueue = false
-    }
-
-    fun getPostIds() : ArrayList<Long> {
-        val list = ArrayList<Long>()
-        for(post in posts){
-            list.add(post.id)
-        }
-        return list
+        query.page = 0
     }
 }

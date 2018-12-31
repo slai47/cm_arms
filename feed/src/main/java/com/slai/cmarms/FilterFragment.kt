@@ -23,7 +23,7 @@ import org.greenrobot.eventbus.Subscribe
 
 class FilterFragment : Fragment() {
 
-    val viewModel : CmarmsViewModel by lazy { CmarmsViewModel.getInstance() }
+    val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
     private val presenter = FilterPresenter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -85,7 +85,7 @@ class FilterFragment : Fragment() {
 
         if(location.isNotEmpty())
             viewModel.query.location = location
-        if(location.isNotEmpty())
+        if(search.isNotEmpty())
             viewModel.query.search = search
 
         try {
@@ -102,20 +102,20 @@ class FilterFragment : Fragment() {
 
     fun updateButtonText() {
         val prefs = context?.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
-        val category : String = prefs!!.getString(Utils.PREF_CATEGORY, "")!!
+        val category : String = prefs.getString(Utils.PREF_CATEGORY, "")!!
         var defaultCategoryStr = getString(R.string.select_category)
         if(category.isNotEmpty())
             defaultCategoryStr = "${getString(R.string.select_category)}\n$category"
 
         filter_category.text = defaultCategoryStr
 
-        val firearmType = prefs!!.getString(Utils.PREF_FIREARM_TYPE, "")!!
+        val firearmType = prefs.getString(Utils.PREF_FIREARM_TYPE, "")!!
         var defaultFirearmType = getString(R.string.select_firearm_type)
         if(firearmType.isNotEmpty())
             defaultFirearmType = "${getString(R.string.select_firearm_type)}\n$firearmType"
         filter_firearm_type.text = defaultFirearmType
 
-        val actionType = prefs!!.getString(Utils.PREF_ACTION_TYPE, "")!!
+        val actionType = prefs.getString(Utils.PREF_ACTION_TYPE, "")!!
         var defaultActionType = getString(R.string.select_action_type)
         if(actionType.isNotEmpty())
             defaultActionType = "${getString(R.string.select_action_type)}\n$actionType"

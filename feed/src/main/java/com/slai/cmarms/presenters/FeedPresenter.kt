@@ -20,8 +20,7 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
     val scope = CoroutineScope(Dispatchers.IO + job)
 
     fun searchForPosts(
-        query: Query,
-        posts: ArrayList<Long>
+        query: Query
     ) {
         val api = IArmsService.getService()
         // launch coroutines
@@ -42,8 +41,7 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
                         for (it in response.body()?.items!!) {
                             Log.d(FeedPresenter::class.java.simpleName,"${it.title}")
                             val post = parsePost(it)
-                            if(!posts.contains(post.id))
-                                list.add(post)
+                            list.add(post)
                         }
                     }
                     scope.launch(Dispatchers.Main) {

@@ -45,9 +45,8 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
     }
 
     fun addPosts(array: List<Post>){
-        val oldEnd = posts.size
-        posts.addAll(array)
-        notifyItemRangeChanged(oldEnd, posts.size)
+        posts = array as ArrayList<Post>
+        notifyDataSetChanged()
     }
 
     fun clearPosts() {
