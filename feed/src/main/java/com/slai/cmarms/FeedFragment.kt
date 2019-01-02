@@ -19,7 +19,9 @@ import com.slai.cmarms.model.Post
 import com.slai.cmarms.presenters.FeedPresenter
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.android.synthetic.main.fragment_feed.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class FeedFragment : Fragment() {
@@ -57,14 +59,14 @@ class FeedFragment : Fragment() {
 
     private fun setupSwipeToRefresh() {
         feed_swipe_refresh.setOnRefreshListener {
-            if(!feed_swipe_refresh.isRefreshing) {
-                GlobalScope.launch {
-                    viewModel.clearPosts()
+            GlobalScope.launch {
+                viewModel.clearPosts()
+                viewModel.reset(context!!)
+                GlobalScope.launch(Dispatchers.Main) {
                     adapter.clearPosts()
-                    presenter.dispose()
-                    presenter.searchForPosts(viewModel.query)
                 }
-                feed_progress.visibility = View.VISIBLE
+                presenter.dispose()
+                presenter.searchForPosts(viewModel.query)
             }
         }
     }
@@ -100,6 +102,7 @@ class FeedFragment : Fragment() {
     }
 
     fun onPostsReceived(list : ArrayList<Post>) {
+        feed_swipe_refresh.isRefreshing = false
         if(!list.isEmpty())
             viewModel.addPosts(list)
         else if(list.isEmpty() && adapter.posts.isNotEmpty()) {

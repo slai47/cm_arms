@@ -28,7 +28,6 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
     fun searchForPosts(
         query: Query
     ) {
-        val api = IArmsService.getService()
         // launch coroutines
         scope.launch {
             val url = "http://www.armslist.com/classifieds/search" + query.getURLExtras()
