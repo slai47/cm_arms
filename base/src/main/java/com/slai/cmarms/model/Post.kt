@@ -9,9 +9,10 @@ data class Post(var title : String) {
     @PrimaryKey
     var id : Long = 0L
     var image : String = ""
-    var description : String = ""
     var url : String = ""
     var price : String = ""
     var location : String = ""
+    var saleType : String = ""
+    var time : String = ""
 
 }

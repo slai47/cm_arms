@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.cmarms.R
 import com.slai.cmarms.model.Post
-import androidx.core.content.ContextCompat.startActivity
-import android.content.Intent.ACTION_VIEW
 import android.net.Uri
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 
 
 class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
@@ -41,10 +41,12 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
             Log.d(FeedAdapter::class.java.simpleName, post.url)
             if(post.url.isNotEmpty()) {
                 val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(post.url)
+                i.data = Uri.parse("http://www.armslist.com${post.url}")
                 it.context.startActivity(i)
             }
         }
+        holder.saleType.text = current.saleType
+        Glide.with(holder.image).load(current.image).into(holder.image)
     }
 
     fun addPosts(array: List<Post>){
@@ -63,5 +65,7 @@ class FeedViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     val title = view.findViewById<TextView>(R.id.list_feed_title)
     val location = view.findViewById<TextView>(R.id.list_feed_location)
     val cost = view.findViewById<TextView>(R.id.list_feed_amount)
+    val image = view.findViewById<ImageView>(R.id.list_feed_image)
+    val saleType = view.findViewById<TextView>(R.id.list_feed_sale_type)
 
 }

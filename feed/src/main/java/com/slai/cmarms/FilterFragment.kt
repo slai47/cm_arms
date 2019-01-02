@@ -43,7 +43,7 @@ class FilterFragment : Fragment() {
 
     private fun fillQueryEditTexts() {
         if(viewModel.query.search.isNotEmpty()){
-            filter_search_text.setText(viewModel.query.search.replace("+", " "))
+            filter_search_text.setText(viewModel.query.search)
         }
         if(viewModel.query.location.isNotEmpty()){
             filter_search_text.setText(viewModel.query.search)
@@ -78,7 +78,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun setViewModelItems() {
-        val search = filter_search_text.text.toString().trim().replace(" ", "+")
+        val search = filter_search_text.text.toString().trim()
         val lowPrice = filter_low_price.text.toString().trim()
         val highPrice = filter_high_price.text.toString().trim()
         val location = filter_location.text.toString().trim()

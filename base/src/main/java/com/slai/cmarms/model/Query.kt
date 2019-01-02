@@ -20,8 +20,10 @@ data class Query(var search : String = "") {
         builder.append("?")
         builder.append("location=$location")
 
-        if(search.isNotEmpty())
-            builder.append("&search=$search")
+        if(search.isNotEmpty()) {
+            val s = search.replace(" ", "+")
+            builder.append("&search=$s")
+        }
 
         if(page > 1) builder.append("&page=$page")
 

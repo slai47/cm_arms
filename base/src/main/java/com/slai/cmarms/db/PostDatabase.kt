@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.slai.cmarms.interfaces.PostDao
 import com.slai.cmarms.model.Post
 
-@Database(entities = arrayOf(Post::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(Post::class), version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun postDao() : PostDao
 }

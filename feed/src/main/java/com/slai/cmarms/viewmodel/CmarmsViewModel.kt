@@ -20,12 +20,8 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application) 
     private lateinit var livePosts : LiveData<MutableList<Post>>
     val query = Query()
     var endOfQueue = false
-    lateinit var appDatabase: AppDatabase
-
-
-    init {
-        appDatabase = Room.inMemoryDatabaseBuilder(application.applicationContext, AppDatabase::class.java).build()
-    }
+    var appDatabase: AppDatabase =
+        Room.inMemoryDatabaseBuilder(application.applicationContext, AppDatabase::class.java).build()
 
     fun getLivePosts() : LiveData<MutableList<Post>> {
         if(!::livePosts.isInitialized){
@@ -60,6 +56,7 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application) 
         GlobalScope.launch(Dispatchers.IO) {
             appDatabase.postDao().nukePosts()
         }
+        livePosts.value!!.clear()
         endOfQueue = false
         query.page = 0
     }

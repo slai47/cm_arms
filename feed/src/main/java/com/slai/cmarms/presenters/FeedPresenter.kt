@@ -12,10 +12,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import me.toptas.rssconverter.RssItem
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
+import java.util.regex.Pattern
 
 
 class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
 
+    val TAG = FeedPresenter::class.java.simpleName
     val job = Job()
     val scope = CoroutineScope(Dispatchers.IO + job)
 
@@ -25,59 +31,120 @@ class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
         val api = IArmsService.getService()
         // launch coroutines
         scope.launch {
-            val url = "http://www.armslist.com/feed.rss/" + query.getURLExtras()
-            Log.d("FeedPresenter", "$url")
-            val request = api.getPosts(url)
-            request.enqueue(object : Callback<RssFeed> {
-                override fun onFailure(call: Call<RssFeed>, t: Throwable) {
-                    scope.launch {
-                        feedFragment.onPostsReceived(ArrayList())
-                    }
-                }
+            val url = "http://www.armslist.com/classifieds/search" + query.getURLExtras()
+            Log.d(TAG, "$url")
+            val doc = Jsoup.connect(url).get()
+            val images  = doc.select(".col-md-5")
+            val texts = doc.select(".col-md-7")
+            Log.d(TAG, "${images.size}")
+            Log.d(TAG, "${texts.size}")
 
-                override fun onResponse(call: Call<RssFeed>, response: Response<RssFeed>) {
-                    val list = ArrayList<Post>()
-                    if(response.isSuccessful) {
-                        for (it in response.body()?.items!!) {
-                            Log.d(FeedPresenter::class.java.simpleName,"${it.title}")
-                            val post = parsePost(it)
-                            list.add(post)
-                        }
-                    }
-                    scope.launch(Dispatchers.Main) {
-                        feedFragment.onPostsReceived(list)
-                    }
-                }
-            })
+            val imageList = getImageList(images)
+
+            val posts = parseData(texts, imageList)
+
+            scope.launch(Dispatchers.Main) {
+                feedFragment.onPostsReceived(posts)
+            }
         }
     }
 
-    private fun parsePost(it: RssItem): Post {
-        val fullTitle = it.title.toString()
-        var titleEndIndex = fullTitle.indexOf("$")
-        if (titleEndIndex < 0) // check if now amount is there and its an offer
-            titleEndIndex = fullTitle.indexOf("- Offer") - 1
-        if(titleEndIndex < 0) // check if the offer isn't there.
-            titleEndIndex = fullTitle.length
+    private fun parseData(
+        texts: Elements,
+        imageList: ArrayList<String>
+    ): ArrayList<Post> {
+        val posts = ArrayList<Post>()
+        var i = 0
+        texts.forEach { text ->
+            // grab name
+            var name = ""
+            // grab price
+            val pair = parseCostName(text, name)
+            val cost = pair.first
+            name = pair.second
 
+            val post = Post(name.trim())
+            post.price = cost
+            post.image = imageList[i]
 
-        val simpleTitle = fullTitle.substring(fullTitle.indexOf(")") + 1, titleEndIndex - 1).trim().replace("-", "")
+            // grab url
+            parseUrlId(text, post)
 
-        val post = Post(simpleTitle)
-        post.description = it.description.toString()
-        post.image = it.image.toString()
-        post.url = it.link.toString()
-        post.location = fullTitle.substring(fullTitle.indexOf("(") + 1, fullTitle.indexOf(")")).trim()
-        post.price = fullTitle.substring(titleEndIndex + 1, fullTitle.length).trim()
+            parseLocationTimeSaleType(text, post)
 
-        if(post.price.contains("offer", false))
-            post.price = "Offer"
-
-        if(post.url.isNotEmpty()){
-            post.id = post.url.replace("http://www.armslist.com/posts/", "").toLong()
+            posts.add(post)
+            i++
         }
+        return posts
+    }
 
-        return post
+    private fun parseLocationTimeSaleType(text: Element, post: Post) {
+        // grab location
+        val locationHtml = text.select("small")
+        try {
+            val saleType = locationHtml[0]
+            post.saleType = saleType.text()
+        } finally {
+        }
+        try {
+            val location = locationHtml[1]
+            post.location = location.text()
+        } finally {
+        }
+        try {
+            val time = locationHtml[2]
+            post.time = time.text()
+        } finally {
+        }
+    }
+
+    private fun parseUrlId(text: Element, post: Post) {
+        var url = ""
+        val links = text.select("a")
+        links.forEach {
+            val href = it.attr("href")
+            if (href.startsWith("/posts"))
+                url = href
+        }
+        post.url = url
+        // pull out id
+        try {
+            if (url.isNotEmpty()) {
+                val idSplit = url.split("/")
+                if (idSplit.size > 2)
+                    post.id = idSplit.get(2).toLong()
+            }
+        } finally {
+        }
+    }
+
+    private fun parseCostName(
+        text: Element,
+        name: String
+    ): Pair<String, String> {
+        var name1 = name
+        var costSplit = text.text().split("$")
+        if (costSplit.size <= 1) {
+            costSplit = text.text().split("Offer")
+        }
+        var cost = "Offer"
+        if (costSplit.size > 1) {
+            name1 = costSplit[0]
+            val splitAgain = costSplit[1].trim().split(" ")
+            cost = splitAgain[0]
+        }
+        return Pair(cost, name1)
+    }
+
+    private fun getImageList(images: Elements): ArrayList<String> {
+        val imageList = ArrayList<String>()
+
+        images.forEach { image ->
+            val a = image.select(".img-responsive")
+            if (a != null && a.size > 0)
+                imageList.add(a[0].attr("src"))
+        }
+        return imageList
     }
 
     override fun dispose() {
