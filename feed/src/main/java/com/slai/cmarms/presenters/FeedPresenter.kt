@@ -3,6 +3,7 @@ package com.slai.cmarms.presenters
 import android.util.Log
 import com.slai.cmarms.FeedFragment
 import com.slai.cmarms.interfaces.IArmsService
+import com.slai.cmarms.interfaces.IPostsReceived
 import com.slai.cmarms.interfaces.IPresenter
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.Query
@@ -19,7 +20,7 @@ import org.jsoup.select.Elements
 import java.util.regex.Pattern
 
 
-class FeedPresenter(val feedFragment: FeedFragment) : IPresenter {
+class FeedPresenter(val feedFragment: IPostsReceived) : IPresenter {
 
     val TAG = FeedPresenter::class.java.simpleName
     val job = Job()

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FeedAdapter
+import com.slai.cmarms.interfaces.IPostsReceived
 import com.slai.cmarms.listeners.EndlessRecyclerViewScrollListener
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.presenters.FeedPresenter
@@ -24,7 +25,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class FeedFragment : Fragment() {
+class FeedFragment : Fragment(), IPostsReceived {
 
     val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
     val presenter: FeedPresenter by lazy { FeedPresenter(this) }
@@ -44,6 +45,7 @@ class FeedFragment : Fragment() {
         viewModel.getLivePosts().observe(this, Observer {
             // Update UI
             Log.d(FeedFragment::class.java.simpleName, "Live Data updated size = ${it.size}")
+            // find the difference and only add new ones.
             adapter.addPosts(it)
         })
 
@@ -65,7 +67,6 @@ class FeedFragment : Fragment() {
                 GlobalScope.launch(Dispatchers.Main) {
                     adapter.clearPosts()
                 }
-                presenter.dispose()
                 presenter.searchForPosts(viewModel.query)
             }
         }
@@ -101,9 +102,9 @@ class FeedFragment : Fragment() {
         presenter.dispose()
     }
 
-    fun onPostsReceived(list : ArrayList<Post>) {
+    override fun onPostsReceived(list : ArrayList<Post>) {
         feed_swipe_refresh.isRefreshing = false
-        if(!list.isEmpty())
+        if(list.isNotEmpty())
             viewModel.addPosts(list)
         else if(list.isEmpty() && adapter.posts.isNotEmpty()) {
             Snackbar.make(feed_recycler, "No more items", Snackbar.LENGTH_SHORT).show()

@@ -11,6 +11,7 @@ import com.slai.cmarms.R
 import com.slai.cmarms.model.Post
 import android.net.Uri
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 
 
@@ -46,7 +47,7 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
             }
         }
         holder.saleType.text = current.saleType
-        Glide.with(holder.image).load(current.image).into(holder.image)
+//        Glide.with(holder.image).load(current.image).into(holder.image)
     }
 
     fun addPosts(array: List<Post>){
@@ -67,5 +68,16 @@ class FeedViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     val cost = view.findViewById<TextView>(R.id.list_feed_amount)
     val image = view.findViewById<ImageView>(R.id.list_feed_image)
     val saleType = view.findViewById<TextView>(R.id.list_feed_sale_type)
+
+}
+
+class PostDiff(var oldPosts : List<Post>, var newPosts : List<Post>) : DiffUtil.Callback() {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = oldPosts[oldItemPosition] == newPosts[newItemPosition]
+
+    override fun getOldListSize(): Int = oldPosts.size
+
+    override fun getNewListSize(): Int = newPosts.size
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = oldPosts[oldItemPosition].id == newPosts[newItemPosition].id
 
 }
