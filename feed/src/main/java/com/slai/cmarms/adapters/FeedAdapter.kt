@@ -51,12 +51,11 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
     }
 
     fun addPosts(array: List<Post>){
-        posts = array as ArrayList<Post>
-        notifyDataSetChanged()
-    }
-
-    fun clearPosts() {
-        posts = ArrayList()
+        if(array.isNotEmpty()) {
+            posts = array as ArrayList<Post>
+        } else {
+            posts.clear()
+        }
         notifyDataSetChanged()
     }
 }

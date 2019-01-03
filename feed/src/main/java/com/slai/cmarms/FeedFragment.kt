@@ -64,9 +64,6 @@ class FeedFragment : Fragment(), IPostsReceived {
             GlobalScope.launch {
                 viewModel.clearPosts()
                 viewModel.reset(context!!)
-                GlobalScope.launch(Dispatchers.Main) {
-                    adapter.clearPosts()
-                }
                 presenter.searchForPosts(viewModel.query)
             }
         }
