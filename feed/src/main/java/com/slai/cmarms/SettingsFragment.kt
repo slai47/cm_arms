@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -14,13 +15,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onResume() {
         super.onResume()
-        findPreference<ListPreference>("dayNight").setOnPreferenceChangeListener { preference, newValue ->
+        val dayNightPref = findPreference<ListPreference>("dayNight")
+        dayNightPref.setOnPreferenceChangeListener { preference, newValue ->
             Log.d(SettingsFragment::class.java.simpleName, "$newValue")
             (activity as MainActivity).setDayNightMode()
             false
 
         }
-        // setup summary auto changing
+        val summaryProvider = Preference.SummaryProvider<ListPreference> {
+            when(it.value){
+                "DAY" -> "Day"
+                "NIGHT" -> "Night"
+                else -> "Auto"
+            }
+        }
+        dayNightPref.summaryProvider = summaryProvider
     }
 
 
