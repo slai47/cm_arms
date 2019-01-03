@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().add(R.id.container, NavigationFragment()).commit()
     }
 
-    private fun setDayNightMode() {
+    fun setDayNightMode() {
         val mode = Utils.getDayNightMode(application)
         var delegateMode = AppCompatDelegate.MODE_NIGHT_AUTO
         when (mode) {

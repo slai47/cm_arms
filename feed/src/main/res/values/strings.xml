@@ -23,4 +23,16 @@
     <string name="action_type_title">Action Type</string>
     <string name="reset">Reset</string>
     <string name="offer">Offer</string>
+
+    <string-array name="themes">
+        <item>Auto</item>
+        <item>Day</item>
+        <item>Night</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>AUTO</item>
+        <item>DAY</item>
+        <item>NIGHT</item>
+    </string-array>
 </resources>
