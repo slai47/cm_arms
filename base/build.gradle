@@ -45,5 +45,4 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version" // use kapt for Kotlin
     api "androidx.room:room-coroutines:$room_version"
 
-
 }

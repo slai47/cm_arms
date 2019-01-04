@@ -47,16 +47,21 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
             }
         }
         holder.saleType.text = current.saleType
-//        Glide.with(holder.image).load(current.image).into(holder.image)
+        Glide.with(holder.image).load(current.image).into(holder.image)
     }
 
     fun addPosts(array: List<Post>){
         if(array.isNotEmpty()) {
-            posts = array as ArrayList<Post>
+            val endIndex = posts.size
+            val newItems = array.filter {
+                !posts.contains(it)
+            }
+            posts.addAll(newItems)
+            notifyItemRangeChanged(endIndex, posts.size)
         } else {
             posts.clear()
+            notifyDataSetChanged()
         }
-        notifyDataSetChanged()
     }
 }
 
@@ -77,6 +82,12 @@ class PostDiff(var oldPosts : List<Post>, var newPosts : List<Post>) : DiffUtil.
 
     override fun getNewListSize(): Int = newPosts.size
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = oldPosts[oldItemPosition].id == newPosts[newItemPosition].id
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val post = oldPosts[oldItemPosition]
+        val newPost = newPosts[newItemPosition]
+       return post.id == newPost.id
+            && post.title == newPost.title
+            && post.url == post.url
+    }
 
 }

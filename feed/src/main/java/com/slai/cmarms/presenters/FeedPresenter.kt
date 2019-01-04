@@ -81,6 +81,7 @@ class FeedPresenter(val feedFragment: IPostsReceived) : IPresenter {
     private fun parseLocationTimeSaleType(text: Element, post: Post) {
         // grab location
         val locationHtml = text.select("small")
+        Log.d(TAG, "${locationHtml.text()}")
         try {
             val saleType = locationHtml[0]
             post.saleType = saleType.text()

@@ -2,6 +2,7 @@ package com.slai.cmarms.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "posts")
 data class Post(var title : String) {
@@ -14,5 +15,5 @@ data class Post(var title : String) {
     var location : String = ""
     var saleType : String = ""
     var time : String = ""
-
+    var createdTime = Date()
 }

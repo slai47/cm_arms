@@ -20,10 +20,7 @@ import com.slai.cmarms.model.Post
 import com.slai.cmarms.presenters.FeedPresenter
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.android.synthetic.main.fragment_feed.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class FeedFragment : Fragment(), IPostsReceived {
 
