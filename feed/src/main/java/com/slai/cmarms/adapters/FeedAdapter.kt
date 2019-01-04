@@ -53,9 +53,8 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
     fun addPosts(array: List<Post>){
         if(array.isNotEmpty()) {
             val endIndex = posts.size
-            val newItems = array.filter {
-                !posts.contains(it)
-            }
+            val newItems = if(posts.size > 0) array.filter { !posts.contains(it) }
+                                        else array
             posts.addAll(newItems)
             notifyItemRangeChanged(endIndex, posts.size)
         } else {
