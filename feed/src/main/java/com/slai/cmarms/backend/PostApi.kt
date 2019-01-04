@@ -1,36 +1,28 @@
-package com.slai.cmarms.presenters
+package com.slai.cmarms.backend
 
 import android.util.Log
-import com.slai.cmarms.FeedFragment
-import com.slai.cmarms.interfaces.IArmsService
 import com.slai.cmarms.interfaces.IPostsReceived
-import com.slai.cmarms.interfaces.IPresenter
 import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.Query
-import kotlinx.coroutines.*
-import me.toptas.rssconverter.RssFeed
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import me.toptas.rssconverter.RssItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import java.util.regex.Pattern
 
+class PostApi(val callback : IPostsReceived) {
 
-class FeedPresenter(val feedFragment: IPostsReceived) : IPresenter {
-
-    val TAG = FeedPresenter::class.java.simpleName
+    val TAG = PostApi::class.java.simpleName
     val job = Job()
     val scope = CoroutineScope(Dispatchers.IO + job)
 
     fun searchForPosts(
         query: Query
-    ) {
+    ) : Job{
         // launch coroutines
-        scope.launch {
+        return scope.launch {
             val url = "http://www.armslist.com/classifieds/search" + query.getURLExtras()
             Log.d(TAG, "$url")
             val doc = Jsoup.connect(url).get()
@@ -44,7 +36,7 @@ class FeedPresenter(val feedFragment: IPostsReceived) : IPresenter {
             val posts = parseData(texts, imageList)
 
             scope.launch(Dispatchers.Main) {
-                feedFragment.onPostsReceived(posts)
+                callback.onPostsReceived(posts)
             }
         }
     }
@@ -77,6 +69,7 @@ class FeedPresenter(val feedFragment: IPostsReceived) : IPresenter {
         }
         return posts
     }
+
 
     private fun parseLocationTimeSaleType(text: Element, post: Post) {
         // grab location
@@ -148,7 +141,4 @@ class FeedPresenter(val feedFragment: IPostsReceived) : IPresenter {
         return imageList
     }
 
-    override fun dispose() {
-        job.cancel()
-    }
 }

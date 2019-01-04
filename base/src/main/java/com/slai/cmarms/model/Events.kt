@@ -7,3 +7,7 @@ enum class NavigationEvent {
     SEARCH,
     SETTINGS
 }
+
+data class ProgressEvent(val showProgress : Boolean)
+
+data class FilterDialogClosed(val title : String)

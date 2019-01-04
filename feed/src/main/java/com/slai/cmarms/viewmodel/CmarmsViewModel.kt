@@ -8,14 +8,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.room.Room
+import com.bumptech.glide.Glide
+import com.slai.cmarms.backend.PostApi
 import com.slai.cmarms.db.AppDatabase
+import com.slai.cmarms.interfaces.IDispose
+import com.slai.cmarms.interfaces.IPostsReceived
 import com.slai.cmarms.model.Post
+import com.slai.cmarms.model.ProgressEvent
 import com.slai.cmarms.model.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
-class CmarmsViewModel(application: Application) : AndroidViewModel(application) {
+class CmarmsViewModel(application: Application) : AndroidViewModel(application), IPostsReceived, IDispose {
+
+
 
     private lateinit var livePosts : LiveData<MutableList<Post>>
     val query = Query()
@@ -23,20 +32,21 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application) 
     var appDatabase: AppDatabase =
         Room.inMemoryDatabaseBuilder(application.applicationContext, AppDatabase::class.java).build()
 
+    private val postApi = PostApi(this)
+    private var job : Job? = null
+
     fun getLivePosts() : LiveData<MutableList<Post>> {
         if(!::livePosts.isInitialized){
             livePosts = MutableLiveData()
             livePosts = appDatabase.postDao().loadLivePosts()
+            postApi.searchForPosts(query)
+            EventBus.getDefault().post(ProgressEvent(true))
         }
         return livePosts
     }
 
-    fun addPosts( newPosts : ArrayList<Post>) {
-        GlobalScope.launch( Dispatchers.IO) {
-            for(post in newPosts) {
-                appDatabase.postDao().insertPost(post)
-            }
-        }
+    fun getPosts(){
+        postApi.searchForPosts(query)
     }
 
     /**
@@ -59,5 +69,28 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application) 
         livePosts.value!!.clear()
         endOfQueue = false
         query.page = 0
+    }
+
+    override fun onPostsReceived(posts: ArrayList<Post>) {
+        when {
+            posts.isNotEmpty() -> GlobalScope.launch( Dispatchers.IO) {
+                for(post in posts) {
+                    appDatabase.postDao().insertPost(post)
+                }
+            }
+            livePosts.value!!.isNotEmpty() -> {
+                endOfQueue = true
+                job?.cancel()
+            }
+            else -> {
+                // no searches found
+            }
+        }
+        EventBus.getDefault().post(ProgressEvent(false))
+        job = null
+    }
+
+    override fun dispose() {
+        job?.cancel()
     }
 }
