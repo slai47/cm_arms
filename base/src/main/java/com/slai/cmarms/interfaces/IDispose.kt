@@ -1,6 +1,6 @@
 package com.slai.cmarms.interfaces
 
-interface IPresenter {
+interface IDispose {
 
     fun dispose()
 

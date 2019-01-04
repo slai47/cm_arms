@@ -17,19 +17,21 @@ import org.greenrobot.eventbus.EventBus
 
 class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : RecyclerView.Adapter<FilterViewHolder>() {
 
-    constructor(context: Context, array: ArrayList<Filter>, prefName : String) : this(context, array) {
-        singleOnly = true
-        storedPrefName = prefName
-        selectedValue = prefs.getString(prefName, "")!!
-        if(selectedValue.isNotEmpty()) {
-            var i = 0
-            for (filter in array) {
-                if (selectedValue == filter.value) {
-                    break
+    constructor(context: Context, array: ArrayList<Filter>, prefName : String?) : this(context, array) {
+        if(prefName != null) {
+            singleOnly = true
+            storedPrefName = prefName
+            selectedValue = prefs.getString(prefName, "")!!
+            if (selectedValue.isNotEmpty()) {
+                var i = 0
+                for (filter in array) {
+                    if (selectedValue == filter.value) {
+                        break
+                    }
+                    i++
                 }
-                i++
+                previousSelection = i
             }
-            previousSelection = i
         }
     }
 

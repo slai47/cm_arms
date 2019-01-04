@@ -12,22 +12,22 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
+import com.bumptech.glide.Glide
 import com.slai.cmarms.adapters.FeedAdapter
-import com.slai.cmarms.interfaces.IPostsReceived
 import com.slai.cmarms.listeners.EndlessRecyclerViewScrollListener
-import com.slai.cmarms.model.Post
-import com.slai.cmarms.presenters.FeedPresenter
+import com.slai.cmarms.model.ProgressEvent
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.coroutines.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
-class FeedFragment : Fragment(), IPostsReceived {
+class FeedFragment : Fragment() {
 
     val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
-    val presenter: FeedPresenter by lazy { FeedPresenter(this) }
 
-    lateinit var adapter : FeedAdapter
+    lateinit var feedAdapter : FeedAdapter
     lateinit var manager : LinearLayoutManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,6 +36,7 @@ class FeedFragment : Fragment(), IPostsReceived {
 
     override fun onResume() {
         super.onResume()
+        EventBus.getDefault().register(this)
 
         setupAdapter()
 
@@ -43,17 +44,14 @@ class FeedFragment : Fragment(), IPostsReceived {
             // Update UI
             Log.d(FeedFragment::class.java.simpleName, "Live Data updated size = ${it.size}")
             // find the difference and only add new ones.
-            adapter.addPosts(it)
+            feedAdapter.addPosts(it)
+            // Prefetch images to use
+            it.forEach {
+                Glide.with(context!!).load(it.url).preload()
+            }
         })
 
         setupSwipeToRefresh()
-
-        if(viewModel.getLivePosts().value.isNullOrEmpty()){
-            feed_progress.visibility = View.VISIBLE
-            presenter.searchForPosts(viewModel.query)
-        } else {
-            feed_progress.visibility = View.GONE
-        }
     }
 
     private fun setupSwipeToRefresh() {
@@ -61,51 +59,57 @@ class FeedFragment : Fragment(), IPostsReceived {
             GlobalScope.launch {
                 viewModel.clearPosts()
                 viewModel.reset(context!!)
-                presenter.searchForPosts(viewModel.query)
+                viewModel.getPosts()
             }
         }
     }
 
-    fun setupAdapter() {
+    private fun setupAdapter() {
         manager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        adapter = FeedAdapter()
-
-        feed_recycler.layoutManager = manager
+        feedAdapter = FeedAdapter()
 
         val divider = DividerItemDecoration(feed_recycler.context, DividerItemDecoration.VERTICAL)
         divider.setDrawable(ContextCompat.getDrawable(feed_recycler.context, R.drawable.shape_divider)!!)
-        feed_recycler.addItemDecoration(divider)
 
         val listener = object : EndlessRecyclerViewScrollListener(manager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 if(!viewModel.endOfQueue) {
                     viewModel.query.page++
                     feed_progress.visibility = View.VISIBLE
-                    presenter.searchForPosts(viewModel.query)
+                    viewModel.getPosts()
                 }
             }
         }
-        feed_recycler.addOnScrollListener(listener)
 
-        feed_recycler.adapter = adapter
+        feed_recycler.apply {
+
+            layoutManager = manager
+
+            addItemDecoration(divider)
+
+            addOnScrollListener(listener)
+
+            adapter = feedAdapter
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        presenter.dispose()
+        EventBus.getDefault().unregister(this)
+        viewModel.dispose()
     }
 
-    override fun onPostsReceived(list : ArrayList<Post>) {
-        feed_swipe_refresh.isRefreshing = false
-        if(list.isNotEmpty())
-            viewModel.addPosts(list)
-        else if(list.isEmpty() && adapter.posts.isNotEmpty()) {
-            Snackbar.make(feed_recycler, "No more items", Snackbar.LENGTH_SHORT).show()
-            viewModel.endOfQueue = true
-        } else
-            Snackbar.make(feed_recycler, "Failed to grab data", Snackbar.LENGTH_SHORT). show()
-
-        feed_progress.visibility = View.GONE
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostsReceived(event : ProgressEvent) {
+        if(event.showProgress){
+            feed_progress.visibility = View.VISIBLE
+        } else {
+            feed_progress.visibility = View.GONE
+            feed_swipe_refresh.isRefreshing = false
+        }
+        if(viewModel.endOfQueue){
+            // Show some thing here
+        }
     }
 }
