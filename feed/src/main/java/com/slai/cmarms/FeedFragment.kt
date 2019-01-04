@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.slai.cmarms.adapters.FeedAdapter
 import com.slai.cmarms.listeners.EndlessRecyclerViewScrollListener
+import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.ProgressEvent
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.android.synthetic.main.fragment_feed.*
@@ -46,9 +47,10 @@ class FeedFragment : Fragment() {
             // find the difference and only add new ones.
             feedAdapter.addPosts(it)
             // Prefetch images to use
-            it.forEach {
-                Glide.with(context!!).load(it.url).preload()
+            it.forEach {post : Post ->
+                Glide.with(context!!).load(post.url).preload()
             }
+            onProgressEvent(ProgressEvent(false))
         })
 
         setupSwipeToRefresh()
@@ -101,7 +103,7 @@ class FeedFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPostsReceived(event : ProgressEvent) {
+    fun onProgressEvent(event : ProgressEvent) {
         if(event.showProgress){
             feed_progress.visibility = View.VISIBLE
         } else {
