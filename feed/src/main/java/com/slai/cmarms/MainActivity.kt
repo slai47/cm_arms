@@ -9,7 +9,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setDayNightMode()
+        setupDayNightMode()
 
         setContentView(R.layout.activity_main)
 
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().add(R.id.container, NavigationFragment()).commit()
     }
 
-    fun setDayNightMode() {
+    fun setupDayNightMode() {
         val mode = Utils.getDayNightMode(application)
         var delegateMode = AppCompatDelegate.MODE_NIGHT_AUTO
         when (mode) {

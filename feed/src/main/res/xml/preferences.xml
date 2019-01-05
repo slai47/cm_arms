@@ -1,13 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference android:title="Theme"
-                    android:entryValues="@array/theme_values"
-                    android:entries="@array/themes"
-                    android:key="dayNight"
-                    android:defaultValue="AUTO"
-                    />
+    <PreferenceCategory
+            android:title="@string/app_settings_title">
 
-    <Preference android:title="Attribution"
-                android:summary="@string/attribution"/>
+        <ListPreference android:title="@string/settings_theme"
+                        android:entryValues="@array/theme_values"
+                        android:entries="@array/themes"
+                        android:key="theme"
+                        android:defaultValue="AUTO"
+                        />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/app_data_title">
+        <PreferenceScreen android:key="reset"
+                          android:title="@string/settings_reset"
+                          android:summary="Clear query information and settings"/>
+
+        <PreferenceScreen
+            android:title="@string/data_policy_title"
+            android:summary=""/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/about_title">
+
+        <PreferenceScreen
+                android:key="review"
+                android:title="@string/settings_review"
+                android:summary=""
+        >
+            <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="http://play.google.com/store/apps/details?id=com.slai.cmarms"
+            />
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="github"
+            android:title="@string/settings_github"
+            android:summary="@string/settings_github_summary"
+            >
+            <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="https://github.com/slai47/cm_arms"
+            />
+        </PreferenceScreen>
+
+
+
+        <Preference android:title="@string/attribution_title"
+                    android:summary="@string/attribution"/>
+    </PreferenceCategory>
 </PreferenceScreen>

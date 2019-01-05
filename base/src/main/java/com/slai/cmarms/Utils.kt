@@ -12,11 +12,11 @@ class Utils {
 
         fun getDayNightMode(context : Context) : DayNightMode{
             val prefs = context.getSharedPreferences(PREFERENCE_FIELD, Context.MODE_PRIVATE)
-            return DayNightMode.valueOf(prefs.getString("dayNight", "AUTO")!!)
+            return DayNightMode.valueOf(prefs.getString("theme", "AUTO")!!)
         }
 
         fun setDayNightMode(context: Context, mode : DayNightMode) {
-            context.getSharedPreferences(PREFERENCE_FIELD, Context.MODE_PRIVATE).edit().putString("dayNight", mode.name).apply()
+            context.getSharedPreferences(PREFERENCE_FIELD, Context.MODE_PRIVATE).edit().putString("theme", mode.name).apply()
         }
     }
 

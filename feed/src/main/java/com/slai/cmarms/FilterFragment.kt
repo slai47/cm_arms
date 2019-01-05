@@ -102,16 +102,19 @@ class FilterFragment : Fragment() {
 
     fun checkLocationPermissionsOrGetLocation(){
         val hasCheckedPermission = pref.getBoolean(HAS_CHECKED_LOCATION, false)
-        if (!hasCheckedPermission && permissionsAskSnackbar == null) {
-            permissionsAskSnackbar = Snackbar.make(filter_caliber, getString(R.string.question_location), Snackbar.LENGTH_INDEFINITE)
-            permissionsAskSnackbar!!.setAction(getString(R.string.yes)) {
+        if (!hasCheckedPermission) {
+            if(permissionsAskSnackbar == null) {
+                permissionsAskSnackbar =
+                        Snackbar.make(filter_caliber, getString(R.string.question_location), Snackbar.LENGTH_INDEFINITE)
+                permissionsAskSnackbar!!.setAction(getString(R.string.yes)) {
+                    askLocationPermission()
+                }
+                permissionsAskSnackbar!!.show()
+            } else if(permissionsAskSnackbar!!.isShown) {
                 askLocationPermission()
+                permissionsAskSnackbar?.dismiss()
             }
-            permissionsAskSnackbar!!.show()
-        } else if(permissionsAskSnackbar!!.isShown) {
-            askLocationPermission()
-            permissionsAskSnackbar?.dismiss()
-        } else {
+        }  else {
             getLocation()
         }
     }
