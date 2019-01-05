@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/PrimaryText"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             android:id="@+id/list_feed_title"
             android:maxLines="2"
             android:layout_marginStart="4dp"
@@ -56,7 +56,7 @@
     <TextView
             android:text=""
             tools:text="Salt Lake City"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/SecondaryText"
@@ -71,7 +71,7 @@
     <TextView
             android:text=""
             tools:text="Offer"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/SecondaryText"
@@ -82,7 +82,5 @@
             app:layout_constraintStart_toEndOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/list_feed_location"
     />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,7 +18,10 @@ data class Query(var search : String = "") {
         val builder = StringBuilder()
 
         builder.append("?")
-        builder.append("location=$location")
+        if(location.isNotEmpty()) {
+            val s = location.replace(" ", "+")
+            builder.append("location=$s")
+        }
 
         if(search.isNotEmpty()) {
             val s = search.replace(" ", "+")

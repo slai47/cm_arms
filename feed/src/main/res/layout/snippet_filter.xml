@@ -34,11 +34,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- location -->
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp"
                                                                    android:layout_height="wrap_content"
                                                                    android:id="@+id/filter_input_location"
                                                                    app:layout_constraintTop_toBottomOf="@id/filter_input_search"
                                                                    android:theme="@style/TextInputLayoutAppearance"
+                                                                   app:layout_constraintStart_toStartOf="parent"
+                                                                   app:layout_constraintEnd_toStartOf="@+id/locationGuidelines"
             >
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
                                                                          android:layout_height="wrap_content"
@@ -48,6 +50,25 @@
                 />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/locationGuidelines"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.85" />
+
+            <androidx.appcompat.widget.AppCompatImageView android:layout_width="50dp"
+                       android:layout_height="50dp"
+                      app:layout_constraintStart_toEndOf="@+id/locationGuidelines"
+                       app:layout_constraintTop_toBottomOf="@id/filter_input_search"
+                       app:srcCompat="@drawable/ic_location"
+                                                          android:id="@+id/filter_location_icon"
+                        android:padding="10dp"
+                      android:clickable="true"
+                      android:background="@drawable/ripple_background"
+            />
 
             <!-- Prices -->
             <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp"

@@ -25,6 +25,11 @@ class MainActivity : AppCompatActivity() {
             Utils.DayNightMode.DAY -> delegateMode = AppCompatDelegate.MODE_NIGHT_NO
             Utils.DayNightMode.NIGHT -> delegateMode = AppCompatDelegate.MODE_NIGHT_YES
         }
+
         AppCompatDelegate.setDefaultNightMode(delegateMode)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }
