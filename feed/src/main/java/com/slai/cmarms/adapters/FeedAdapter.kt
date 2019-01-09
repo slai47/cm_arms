@@ -42,6 +42,7 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
             Log.d(FeedAdapter::class.java.simpleName, post.url)
             if(post.url.isNotEmpty()) {
                 val i = Intent(Intent.ACTION_VIEW)
+                Log.d(FeedAdapter::class.java.simpleName, "http://www.armslist.com${post.url}")
                 i.data = Uri.parse("http://www.armslist.com${post.url}")
                 it.context.startActivity(i)
             }

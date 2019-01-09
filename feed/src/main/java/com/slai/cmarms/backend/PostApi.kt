@@ -51,7 +51,7 @@ class PostApi(val callback : IPostsReceived) {
             // grab name
             var name = ""
             // grab price
-            val pair = parseCostName(text, name)
+            val pair = parseCostName(text)
             val cost = pair.first
             name = pair.second
 
@@ -78,7 +78,7 @@ class PostApi(val callback : IPostsReceived) {
         var startIndex = 0
         if(post.premium) startIndex++
 
-        Log.d(TAG, "${locationHtml.text()}")
+        Log.d(TAG, "Parse Cost = ${locationHtml.text()}")
         try {
             val saleType = locationHtml[startIndex]
             post.saleType = saleType.text()
@@ -117,10 +117,9 @@ class PostApi(val callback : IPostsReceived) {
     }
 
     private fun parseCostName(
-        text: Element,
-        name: String
+        text: Element
     ): Pair<String, String> {
-        var name1 = name
+        var name1 = ""
         var costSplit = text.text().split("$")
         if (costSplit.size <= 1) {
             costSplit = text.text().split("Offer")
@@ -130,7 +129,10 @@ class PostApi(val callback : IPostsReceived) {
             name1 = costSplit[0]
             val splitAgain = costSplit[1].trim().split(" ")
             cost = splitAgain[0]
+            if(cost == "For")
+                cost = "Offer"
         }
+        Log.d(PostApi::class.java.simpleName, "Parse Cost = ${text.text()}")
         return Pair(cost, name1)
     }
 
