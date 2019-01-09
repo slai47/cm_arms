@@ -3,10 +3,10 @@
     <string name="title_search">Search</string>
     <string name="title_settings">Settings</string>
 
-    <string name="attribution"> Thank for the beautiful icons &amp; images: \n
-        filter by andriwidodo from the Noun Project\n
-        Settings by Ron Scott from the Noun Project\n
-        Location by Rainbow Designs from the Noun Project\n
+    <string name="attribution"> Thank for the beautiful icons &amp; images: \n\n
+        filter by andriwidodo from the Noun Project\n\n
+        Settings by Ron Scott from the Noun Project\n\n
+        Location by Rainbow Designs from the Noun Project\n\n
     </string>
     <string name="search_keyword">Search Keyword</string>
     <string name="location">Location</string>

@@ -29,6 +29,8 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.0-alpha02'
 
     implementation "com.google.android.gms:play-services-location:+"
+
+    implementation 'com.ashokvarma.android:bottom-navigation-bar:2.1.0'
 }
 repositories {
     mavenCentral()
