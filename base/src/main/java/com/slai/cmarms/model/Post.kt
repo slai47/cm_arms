@@ -16,4 +16,5 @@ data class Post(var title : String) {
     var saleType : String = ""
     var time : String = ""
     var createdTime = Date()
+    var premium : Boolean = false
 }

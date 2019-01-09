@@ -83,4 +83,15 @@
             app:layout_constraintTop_toBottomOf="@+id/list_feed_location"
     />
 
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              android:text="Premium Vendor"
+              android:textColor="@color/premium"
+              android:visibility="invisible"
+              android:textSize="12sp"
+              android:id="@+id/list_feed_premium"
+    />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

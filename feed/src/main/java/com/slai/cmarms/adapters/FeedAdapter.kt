@@ -48,6 +48,9 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
         }
         holder.saleType.text = current.saleType
         Glide.with(holder.image).load(current.image).into(holder.image)
+
+        holder.premium.visibility = if(current.premium) View.VISIBLE
+                                    else View.INVISIBLE
     }
 
     fun addPosts(array: List<Post>){
@@ -71,6 +74,7 @@ class FeedViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     val cost = view.findViewById<TextView>(R.id.list_feed_amount)
     val image = view.findViewById<ImageView>(R.id.list_feed_image)
     val saleType = view.findViewById<TextView>(R.id.list_feed_sale_type)
+    val premium = view.findViewById<TextView>(R.id.list_feed_premium)
 
 }
 

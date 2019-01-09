@@ -74,19 +74,23 @@ class PostApi(val callback : IPostsReceived) {
     private fun parseLocationTimeSaleType(text: Element, post: Post) {
         // grab location
         val locationHtml = text.select("small")
+        post.premium = locationHtml.text().contains("Premium Vendor", true)
+        var startIndex = 0
+        if(post.premium) startIndex++
+
         Log.d(TAG, "${locationHtml.text()}")
         try {
-            val saleType = locationHtml[0]
+            val saleType = locationHtml[startIndex]
             post.saleType = saleType.text()
         } finally {
         }
         try {
-            val location = locationHtml[1]
+            val location = locationHtml[startIndex + 1]
             post.location = location.text()
         } finally {
         }
         try {
-            val time = locationHtml[2]
+            val time = locationHtml[startIndex + 2]
             post.time = time.text()
         } finally {
         }

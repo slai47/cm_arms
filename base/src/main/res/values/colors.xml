@@ -19,4 +19,5 @@
     <color name="bottom_navigation_background">#DDD</color>
 
     <color name="red">#ffff0000</color>
+    <color name="premium">#FFC107</color>
 </resources>
