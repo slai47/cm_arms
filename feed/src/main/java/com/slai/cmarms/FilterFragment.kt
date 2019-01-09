@@ -76,7 +76,8 @@ class FilterFragment : Fragment() {
         fillQueryEditTexts()
         updateButtonText(FilterDialogClosed(""))
 
-        setupLocation()
+        if(filter_location.text.isNullOrEmpty())
+            setupLocation()
     }
 
     private fun setupLocation() {
