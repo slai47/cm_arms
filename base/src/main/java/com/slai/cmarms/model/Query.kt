@@ -2,7 +2,11 @@ package com.slai.cmarms.model
 
 data class Query(var search : String = "") {
 
-    var location : String = "USA"
+    companion object {
+        val DEFAULT_LOCATION = "USA"
+    }
+
+    var location : String = DEFAULT_LOCATION
     var category : String = "guns"
     var page : Int = 1
     var currency : String = ""

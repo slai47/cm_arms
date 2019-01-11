@@ -24,10 +24,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FilterAdapter
 import com.slai.cmarms.backend.GeocoderApi
-import com.slai.cmarms.model.Filter
-import com.slai.cmarms.model.FilterDialogClosed
-import com.slai.cmarms.model.NavigationEvent
-import com.slai.cmarms.model.NavigationTransitionEvent
+import com.slai.cmarms.model.*
 import com.slai.cmarms.view.DialogRecyclerView
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.android.synthetic.main.fragment_nav.*
@@ -202,7 +199,7 @@ class FilterFragment : Fragment() {
             prefs.edit().remove(Utils.PREF_CATEGORY).remove(Utils.PREF_ACTION_TYPE).remove(Utils.PREF_FIREARM_TYPE).apply()
             updateButtonText(FilterDialogClosed(""))
             filter_search_text.text = null
-            filter_location.text = null
+            filter_location.setText(Query.DEFAULT_LOCATION)
             filter_low_price.text = null
             filter_high_price.text = null
             updateLocationButton(true)
@@ -215,10 +212,9 @@ class FilterFragment : Fragment() {
         val highPrice = filter_high_price.text.toString().trim()
         val location = filter_location.text.toString().trim()
 
-        if(location.isNotEmpty())
-            viewModel.query.location = location
-        if(search.isNotEmpty())
-            viewModel.query.search = search
+        viewModel.query.location = location
+
+        viewModel.query.search = search
 
         try {
             viewModel.query.lowPrice = lowPrice.toInt()
