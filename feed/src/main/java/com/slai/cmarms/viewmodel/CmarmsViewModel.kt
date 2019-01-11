@@ -77,7 +77,7 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application),
 
     override fun onPostsReceived(posts: ArrayList<Post>) {
         Log.d(CmarmsViewModel::class.java.simpleName, "onPostsReceived ${posts.size}")
-        var success = false
+        var sendProgress = true
         when {
             posts.isNotEmpty() -> {
                 GlobalScope.launch( Dispatchers.IO) {
@@ -85,7 +85,7 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application),
                         appDatabase.postDao().insertPost(post)
                     }
                 }
-                success = true
+                sendProgress = false
             }
             livePosts.value!!.isNotEmpty() -> {
                 endOfQueue = true
@@ -96,7 +96,8 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application),
             }
         }
         job = null
-        EventBus.getDefault().post(ProgressEvent(success))
+        if(sendProgress)
+            EventBus.getDefault().post(ProgressEvent(false))
     }
 
     override fun dispose() {

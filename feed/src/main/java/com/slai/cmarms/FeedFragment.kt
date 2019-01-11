@@ -32,7 +32,7 @@ class FeedFragment : Fragment() {
     lateinit var manager : LinearLayoutManager
 
     /**
-     *
+     * The observer for posts loading in order send them to the adapter and turn off progress.
      *
      */
     var observer = Observer<MutableList<Post>> {
@@ -40,9 +40,9 @@ class FeedFragment : Fragment() {
         Log.d(FeedFragment::class.java.simpleName, "Live Data updated size = ${it.size}")
         // find the difference and only add new ones.
         feedAdapter.addPosts(it)
+
         EventBus.getDefault().post(ProgressEvent(false))
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_feed, container, false)

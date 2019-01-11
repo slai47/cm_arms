@@ -2,7 +2,7 @@ package com.slai.cmarms.model
 
 data class Query(var search : String = "") {
 
-    var location : String = "usa"
+    var location : String = "USA"
     var category : String = "guns"
     var page : Int = 1
     var currency : String = ""

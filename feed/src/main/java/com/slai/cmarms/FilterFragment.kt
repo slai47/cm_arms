@@ -76,12 +76,12 @@ class FilterFragment : Fragment() {
         fillQueryEditTexts()
         updateButtonText(FilterDialogClosed(""))
 
-        if(viewModel.query.location?.isNullOrEmpty())
-            setupLocation()
+        setupLocation()
     }
 
     private fun setupLocation() {
-        checkLocationPermissionsOrGetLocation()
+        if(viewModel.query.location?.isNullOrEmpty())
+            checkLocationPermissionsOrGetLocation()
 
         updateLocationButton(true)
 
@@ -94,10 +94,10 @@ class FilterFragment : Fragment() {
     fun updateLocationButton(on : Boolean){
         if(on){
             filter_location_icon.isEnabled = true
-            filter_location_icon.setColorFilter(ContextCompat.getColor(context!!, R.color.colorAccent), PorterDuff.Mode.MULTIPLY)
+            filter_location_icon.setImageResource(R.drawable.ic_location_active)
         } else {
             filter_location_icon.isEnabled = false
-            filter_location_icon.colorFilter = null
+            filter_location_icon.setImageResource(R.drawable.ic_location)
         }
     }
 
@@ -177,13 +177,13 @@ class FilterFragment : Fragment() {
             filter_search_text.setText(viewModel.query.search)
         }
         if(viewModel.query.location.isNotEmpty()){
-            filter_search_text.setText(viewModel.query.search)
+            filter_location.setText(viewModel.query.location)
         }
         if(viewModel.query.lowPrice != 0){
-            filter_search_text.setText("${viewModel.query.lowPrice}")
+            filter_low_price.setText("${viewModel.query.lowPrice}")
         }
         if(viewModel.query.highPrice != 0){
-            filter_search_text.setText("${viewModel.query.highPrice}")
+            filter_high_price.setText("${viewModel.query.highPrice}")
         }
     }
 

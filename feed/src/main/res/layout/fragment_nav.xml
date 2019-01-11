@@ -20,11 +20,12 @@
     <com.ashokvarma.bottomnavigation.BottomNavigationBar
             android:id="@+id/navigation"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             app:bnbMode="mode_fixed"
             app:bnbElevation="6dp"
             app:bnbBackgroundColor="@color/bottom_navigation_background"
             app:bnbActiveColor="@color/colorPrimary"
+            app:bnbInactiveColor="@color/bottom_navigation_inactive"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
