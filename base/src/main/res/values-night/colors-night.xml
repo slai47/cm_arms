@@ -8,4 +8,6 @@
     <color name="divider">#565656</color>
     <color name="icon_color">#CCC</color>
     <color name="bottom_navigation_background">#2d1e1a</color>
+
+    <color name="premium">#FFC107</color>
 </resources>

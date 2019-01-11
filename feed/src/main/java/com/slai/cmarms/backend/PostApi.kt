@@ -12,7 +12,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-class PostApi() {
+class PostApi {
 
     val TAG = PostApi::class.java.simpleName
     val job = Job()

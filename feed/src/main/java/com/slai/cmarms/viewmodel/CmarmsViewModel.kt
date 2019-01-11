@@ -42,15 +42,15 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application),
             livePosts = MutableLiveData()
             livePosts = appDatabase.postDao().loadLivePosts()
         }
-        if(livePosts.value == null || (livePosts.value!!.isEmpty())) {
+        if((livePosts.value == null || (livePosts.value!!.isEmpty())) && job == null) {
             EventBus.getDefault().post(ProgressEvent(true))
             getPosts()
         }
         return livePosts
     }
 
-    fun getPosts(){
-        postApi.searchForPosts(this, query)
+    fun getPosts() {
+        job = postApi.searchForPosts(this, query)
     }
 
     /**
@@ -72,7 +72,7 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application),
         }
         livePosts.value!!.clear()
         endOfQueue = false
-        query.page = 0
+        query.page = 1
     }
 
     override fun onPostsReceived(posts: ArrayList<Post>) {

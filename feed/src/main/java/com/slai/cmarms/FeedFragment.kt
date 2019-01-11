@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FeedAdapter
 import com.slai.cmarms.listeners.EndlessRecyclerViewScrollListener
 import com.slai.cmarms.model.Post
@@ -31,6 +32,8 @@ class FeedFragment : Fragment() {
     lateinit var feedAdapter : FeedAdapter
     lateinit var manager : LinearLayoutManager
 
+    var endOfQueue : Snackbar? = null
+
     /**
      * The observer for posts loading in order send them to the adapter and turn off progress.
      *
@@ -38,6 +41,7 @@ class FeedFragment : Fragment() {
     var observer = Observer<MutableList<Post>> {
         // Update UI
         Log.d(FeedFragment::class.java.simpleName, "Live Data updated size = ${it.size}")
+
         // find the difference and only add new ones.
         feedAdapter.addPosts(it)
 
@@ -117,6 +121,11 @@ class FeedFragment : Fragment() {
         }
         if(viewModel.endOfQueue){
             // Show some thing here
+            endOfQueue = Snackbar.make(container, "End of Queue", Snackbar.LENGTH_INDEFINITE).setAction("Dismiss"){
+                endOfQueue?.dismiss()
+                endOfQueue = null
+            }
+            endOfQueue?.show()
         }
     }
 }
