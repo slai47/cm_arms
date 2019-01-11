@@ -31,6 +31,19 @@ class FeedFragment : Fragment() {
     lateinit var feedAdapter : FeedAdapter
     lateinit var manager : LinearLayoutManager
 
+    /**
+     *
+     *
+     */
+    var observer = Observer<MutableList<Post>> {
+        // Update UI
+        Log.d(FeedFragment::class.java.simpleName, "Live Data updated size = ${it.size}")
+        // find the difference and only add new ones.
+        feedAdapter.addPosts(it)
+        EventBus.getDefault().post(ProgressEvent(false))
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_feed, container, false)
     }
@@ -41,17 +54,7 @@ class FeedFragment : Fragment() {
 
         setupAdapter()
 
-        viewModel.getLivePosts().observe(this, Observer {
-            // Update UI
-            Log.d(FeedFragment::class.java.simpleName, "Live Data updated size = ${it.size}")
-            // find the difference and only add new ones.
-            feedAdapter.addPosts(it)
-            // Prefetch images to use
-            it.forEach {post : Post ->
-                Glide.with(context!!).load(post.url).preload()
-            }
-            onProgressEvent(ProgressEvent(false))
-        })
+        viewModel.getLivePosts().observe(this, observer)
 
         setupSwipeToRefresh()
     }
@@ -99,6 +102,7 @@ class FeedFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
+        viewModel.getLivePosts().removeObserver(observer)
         viewModel.dispose()
     }
 

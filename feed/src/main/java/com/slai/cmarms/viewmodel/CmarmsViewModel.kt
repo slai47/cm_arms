@@ -3,6 +3,7 @@ package com.slai.cmarms.viewmodel
 import android.app.Application
 import android.content.Context
 import android.provider.Settings
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,25 +33,28 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application),
     var appDatabase: AppDatabase =
         Room.inMemoryDatabaseBuilder(application.applicationContext, AppDatabase::class.java).build()
 
-    private val postApi = PostApi(this)
+    private val postApi = PostApi()
     private var job : Job? = null
+
 
     fun getLivePosts() : LiveData<MutableList<Post>> {
         if(!::livePosts.isInitialized){
             livePosts = MutableLiveData()
             livePosts = appDatabase.postDao().loadLivePosts()
-            postApi.searchForPosts(query)
+        }
+        if(livePosts.value == null || (livePosts.value!!.isEmpty())) {
             EventBus.getDefault().post(ProgressEvent(true))
+            getPosts()
         }
         return livePosts
     }
 
     fun getPosts(){
-        postApi.searchForPosts(query)
+        postApi.searchForPosts(this, query)
     }
 
     /**
-     * This is reseting of the prefences
+     * This is reseting of the prefences, run on coroutines since their is a lot of them
      */
     suspend fun reset(context : Context){
         val pref = context.getSharedPreferences("cmarms", Context.MODE_PRIVATE)
@@ -72,11 +76,16 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application),
     }
 
     override fun onPostsReceived(posts: ArrayList<Post>) {
+        Log.d(CmarmsViewModel::class.java.simpleName, "onPostsReceived ${posts.size}")
+        var success = false
         when {
-            posts.isNotEmpty() -> GlobalScope.launch( Dispatchers.IO) {
-                for(post in posts) {
-                    appDatabase.postDao().insertPost(post)
+            posts.isNotEmpty() -> {
+                GlobalScope.launch( Dispatchers.IO) {
+                    for(post in posts) {
+                        appDatabase.postDao().insertPost(post)
+                    }
                 }
+                success = true
             }
             livePosts.value!!.isNotEmpty() -> {
                 endOfQueue = true
@@ -86,8 +95,8 @@ class CmarmsViewModel(application: Application) : AndroidViewModel(application),
                 // no searches found
             }
         }
-        EventBus.getDefault().post(ProgressEvent(false))
         job = null
+        EventBus.getDefault().post(ProgressEvent(success))
     }
 
     override fun dispose() {

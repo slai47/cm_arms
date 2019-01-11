@@ -67,6 +67,7 @@
                                                           android:id="@+id/filter_location_icon"
                         android:padding="10dp"
                       android:clickable="true"
+                                                          android:focusable="true"
                       android:background="@drawable/ripple_background"
             />
 

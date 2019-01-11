@@ -12,13 +12,13 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-class PostApi(val callback : IPostsReceived) {
+class PostApi() {
 
     val TAG = PostApi::class.java.simpleName
     val job = Job()
     val scope = CoroutineScope(Dispatchers.IO + job)
 
-    fun searchForPosts(
+    fun searchForPosts( callback : IPostsReceived,
         query: Query
     ) : Job{
         // launch coroutines

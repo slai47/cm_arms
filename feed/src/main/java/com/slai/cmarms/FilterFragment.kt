@@ -76,7 +76,7 @@ class FilterFragment : Fragment() {
         fillQueryEditTexts()
         updateButtonText(FilterDialogClosed(""))
 
-        if(filter_location.text.isNullOrEmpty())
+        if(viewModel.query.location?.isNullOrEmpty())
             setupLocation()
     }
 
@@ -205,6 +205,7 @@ class FilterFragment : Fragment() {
             filter_location.text = null
             filter_low_price.text = null
             filter_high_price.text = null
+            updateLocationButton(true)
         }
     }
 
