@@ -41,7 +41,8 @@ class FeedFragment : Fragment() {
         // find the difference and only add new ones.
         feedAdapter.addPosts(it)
 
-        EventBus.getDefault().post(ProgressEvent(false))
+        if(it.size != 0)
+            EventBus.getDefault().post(ProgressEvent(false))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
