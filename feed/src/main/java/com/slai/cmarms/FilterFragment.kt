@@ -4,12 +4,9 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.PorterDuff
 import android.location.Address
 import android.location.Location
 import android.os.Bundle
-import android.provider.Telephony
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FilterAdapter
 import com.slai.cmarms.backend.GeocoderApi
@@ -50,7 +46,7 @@ class FilterFragment : Fragment() {
 
     var permissionsAskSnackbar : Snackbar? = null
 
-    val pref by lazy { context!!.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE) }
+    val pref by lazy { context!!.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_filter, container, false)
@@ -64,10 +60,10 @@ class FilterFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
 
-        setupDialog(filter_category, filterDB.categories, getString(R.string.categories_title), Utils.PREF_CATEGORY)
+        setupDialog(filter_category, filterDB.categories, getString(R.string.categories_title), PrefUtils.PREF_CATEGORY)
         setupDialog(filter_caliber, filterDB.calibers, getString(R.string.caliber_title), null)
-        setupDialog(filter_firearm_type, filterDB.firearmTypes, getString(R.string.firearm_type_title), Utils.PREF_FIREARM_TYPE)
-        setupDialog(filter_action_type, filterDB.actions, getString(R.string.action_type_title), Utils.PREF_ACTION_TYPE)
+        setupDialog(filter_firearm_type, filterDB.firearmTypes, getString(R.string.firearm_type_title), PrefUtils.PREF_FIREARM_TYPE)
+        setupDialog(filter_action_type, filterDB.actions, getString(R.string.action_type_title), PrefUtils.PREF_ACTION_TYPE)
 
         setupSearchReset()
         fillQueryEditTexts()
@@ -195,8 +191,8 @@ class FilterFragment : Fragment() {
                 viewModel.reset(context!!)
             }
             viewModel.clearPosts()
-            val prefs = context?.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
-            prefs.edit().remove(Utils.PREF_CATEGORY).remove(Utils.PREF_ACTION_TYPE).remove(Utils.PREF_FIREARM_TYPE).apply()
+            val prefs = context?.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
+            prefs.edit().remove(PrefUtils.PREF_CATEGORY).remove(PrefUtils.PREF_ACTION_TYPE).remove(PrefUtils.PREF_FIREARM_TYPE).apply()
             updateButtonText(FilterDialogClosed(""))
             filter_search_text.text = null
             filter_location.setText(Query.DEFAULT_LOCATION)
@@ -249,10 +245,10 @@ class FilterFragment : Fragment() {
 
     @Subscribe
     fun updateButtonText(event : FilterDialogClosed) { // optimize to only update the correct one
-        val prefs = context?.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
+        val prefs = context?.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
 
         filter_category.apply {
-            val category : String = prefs.getString(Utils.PREF_CATEGORY, "")!!
+            val category : String = prefs.getString(PrefUtils.PREF_CATEGORY, "")!!
             var defaultCategoryStr = getString(R.string.select_category)
             if(category.isNotEmpty())
                 defaultCategoryStr = "${getString(R.string.select_category)}\n$category"
@@ -260,7 +256,7 @@ class FilterFragment : Fragment() {
         }
 
         filter_firearm_type.apply {
-            val firearmType = prefs.getString(Utils.PREF_FIREARM_TYPE, "")!!
+            val firearmType = prefs.getString(PrefUtils.PREF_FIREARM_TYPE, "")!!
             var defaultFirearmType = getString(R.string.select_firearm_type)
             if(firearmType.isNotEmpty())
                 defaultFirearmType = "${getString(R.string.select_firearm_type)}\n$firearmType"
@@ -268,7 +264,7 @@ class FilterFragment : Fragment() {
         }
 
         filter_action_type.apply {
-            val actionType = prefs.getString(Utils.PREF_ACTION_TYPE, "")!!
+            val actionType = prefs.getString(PrefUtils.PREF_ACTION_TYPE, "")!!
             var defaultActionType = getString(R.string.select_action_type)
             if(actionType.isNotEmpty())
                 defaultActionType = "${getString(R.string.select_action_type)}\n$actionType"
@@ -289,7 +285,7 @@ class FilterFragment : Fragment() {
     fun onFilterChange(filter : Filter) {
         val snack = Snackbar.make(nav_container, "${filter.value} was changed", Snackbar.LENGTH_SHORT).show()
         GlobalScope.launch {
-            val prefs = context?.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
+            val prefs = context?.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
             if(prefs.getBoolean(filter.value, false)){
                 viewModel.query.filters[filter.value] = filter
             } else {

@@ -78,7 +78,7 @@ class PostApi {
         var startIndex = 0
         if(post.premium) startIndex++
 
-        Log.d(TAG, "Parse Cost = ${locationHtml.text()}")
+        Log.d(TAG, "Parse location = ${locationHtml.text()}")
         try {
             val saleType = locationHtml[startIndex]
             post.saleType = saleType.text()
@@ -121,8 +121,11 @@ class PostApi {
     ): Pair<String, String> {
         var name1 = ""
         var costSplit = text.text().split("$")
-        if (costSplit.size <= 1) {
+        if (costSplit.size <= 1) { // If the offer is there
             costSplit = text.text().split("Offer")
+        }
+        if(costSplit.size <= 1){ // If its free
+            costSplit = text.text().split("FREE")
         }
         var cost = "Offer"
         if (costSplit.size > 1) {
@@ -131,8 +134,10 @@ class PostApi {
             cost = splitAgain[0]
             if(cost == "For")
                 cost = "Offer"
+            if(cost == "FREE")
+                cost = "Free"
         }
-        Log.d(PostApi::class.java.simpleName, "Parse Cost = ${text.text()}")
+        Log.d(PostApi::class.java.simpleName, "Parse Cost = ${text.text()} | $name1 | $cost")
         return Pair(cost, name1)
     }
 

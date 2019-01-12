@@ -15,14 +15,17 @@ import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.slai.cmarms.model.ProgressEvent
 import org.greenrobot.eventbus.EventBus
+import java.lang.StringBuilder
 
 
 class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
 
     var posts = ArrayList<Post>()
 
+    var resId = R.layout.list_feed_regular
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
-        return FeedViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_feed_regular, parent, false))
+        return FeedViewHolder(LayoutInflater.from(parent.context).inflate(resId, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -33,8 +36,12 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
         val current = posts.get(position)
         holder.title.text = current.title
 
-        if(!current.price.contains("offer", true)) holder.cost.text = "$${current.price}"
-        else holder.cost.text = holder.itemView.context.getString(R.string.offer)
+        if(current.price.contains("want", true))
+            holder.cost.text = "${current.price}"
+        else if(!current.price.contains("offer", true))
+            holder.cost.text = "$${current.price}"
+        else
+            holder.cost.text = holder.itemView.context.getString(R.string.offer)
 
         holder.location.text = current.location
 
@@ -50,7 +57,9 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
             }
         }
         holder.saleType.text = current.saleType
-        Glide.with(holder.image).load(current.image).into(holder.image)
+
+        if(resId != R.layout.list_feed_text)
+            Glide.with(holder.image).load(current.image).into(holder.image)
 
         holder.premium.visibility = if(current.premium) View.VISIBLE
                                     else View.INVISIBLE

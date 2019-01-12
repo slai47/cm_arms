@@ -19,11 +19,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setupDayNightMode() {
-        val mode = Utils.getDayNightMode(application)
+        val mode = PrefUtils.getDayNightMode(application)
         var delegateMode = AppCompatDelegate.MODE_NIGHT_AUTO
         when (mode) {
-            Utils.DayNightMode.DAY -> delegateMode = AppCompatDelegate.MODE_NIGHT_NO
-            Utils.DayNightMode.NIGHT -> delegateMode = AppCompatDelegate.MODE_NIGHT_YES
+            PrefUtils.DayNightMode.DAY -> delegateMode = AppCompatDelegate.MODE_NIGHT_NO
+            PrefUtils.DayNightMode.NIGHT -> delegateMode = AppCompatDelegate.MODE_NIGHT_YES
         }
 
         AppCompatDelegate.setDefaultNightMode(delegateMode)

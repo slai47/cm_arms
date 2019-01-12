@@ -10,6 +10,13 @@
                         android:key="theme"
                         android:defaultValue="AUTO"
                         />
+        <ListPreference android:title="@string/settings_feed_layout"
+                        android:entryValues="@array/feed_layout_values"
+                        android:entries="@array/feed_layout"
+                        android:key="layout"
+                        android:defaultValue="STANDARD"
+        />
+
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -1,12 +1,10 @@
 package com.slai.cmarms
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.ListPreference
-import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import com.google.android.material.snackbar.Snackbar
@@ -26,13 +24,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onResume() {
         super.onResume()
-        Log.d(SettingsFragment::class.java.simpleName, "${Utils.getDayNightMode(context!!)}")
+        Log.d(SettingsFragment::class.java.simpleName, "${PrefUtils.getDayNightMode(context!!)}")
         val dayNightPref = findPreference<ListPreference>("theme")
         dayNightPref.setOnPreferenceChangeListener { preference, newValue ->
-            val current = Utils.getDayNightMode(context!!)
+            val current = PrefUtils.getDayNightMode(context!!)
             Log.d(SettingsFragment::class.java.simpleName, "$newValue")
-            val dayNightMode = Utils.DayNightMode.valueOf(newValue as String)
-            Utils.setDayNightMode(context!!, dayNightMode)
+            val dayNightMode = PrefUtils.DayNightMode.valueOf(newValue as String)
+            PrefUtils.setDayNightMode(context!!, dayNightMode)
             if(current != dayNightMode) {
                 val intent = Intent(activity, MainActivity::class.java)
                 startActivity(intent)
@@ -41,6 +39,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         dayNightPref.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+
+        val layoutFeed = findPreference<ListPreference>("layout")
+        layoutFeed.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+        layoutFeed.setOnPreferenceChangeListener { preference, newValue ->
+            Log.d(SettingsFragment::class.java.simpleName, "$newValue")
+            val dayNightMode = PrefUtils.LayoutStyle.valueOf(newValue as String)
+            PrefUtils.setLayoutStyle(context!!, dayNightMode)
+            true
+        }
 
         val reset = findPreference<PreferenceScreen>("reset")
         reset.setOnPreferenceClickListener {

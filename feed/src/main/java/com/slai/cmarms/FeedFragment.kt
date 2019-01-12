@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FeedAdapter
 import com.slai.cmarms.listeners.EndlessRecyclerViewScrollListener
@@ -75,32 +74,55 @@ class FeedFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        manager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        if(feed_recycler.adapter != null){
+            val prefs = PrefUtils.getLayoutStyle(context!!)
+            val resId = when(prefs){
+                PrefUtils.LayoutStyle.STANDARD -> R.layout.list_feed_regular
+                PrefUtils.LayoutStyle.LARGE -> R.layout.list_feed_large
+                PrefUtils.LayoutStyle.SMALL -> R.layout.list_feed_small
+                PrefUtils.LayoutStyle.TEXT -> R.layout.list_feed_text
+            }
+            if(resId != feedAdapter.resId){
+                feedAdapter.resId = resId
+            }
+            feedAdapter.notifyDataSetChanged()
+        } else {
+            manager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        feedAdapter = FeedAdapter()
+            feedAdapter = FeedAdapter()
 
-        val divider = DividerItemDecoration(feed_recycler.context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(feed_recycler.context, R.drawable.shape_divider)!!)
+            val prefs = PrefUtils.getLayoutStyle(context!!)
+            feedAdapter.resId = when(prefs){
+                PrefUtils.LayoutStyle.STANDARD -> R.layout.list_feed_regular
+                PrefUtils.LayoutStyle.LARGE -> R.layout.list_feed_large
+                PrefUtils.LayoutStyle.SMALL -> R.layout.list_feed_small
+                PrefUtils.LayoutStyle.TEXT -> R.layout.list_feed_text
+            }
 
-        val listener = object : EndlessRecyclerViewScrollListener(manager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                if(!viewModel.endOfQueue) {
-                    viewModel.query.page++
-                    feed_progress.visibility = View.VISIBLE
-                    viewModel.getPosts()
+            val divider = DividerItemDecoration(feed_recycler.context, DividerItemDecoration.VERTICAL)
+            divider.setDrawable(ContextCompat.getDrawable(feed_recycler.context, R.drawable.shape_divider)!!)
+
+            val listener = object : EndlessRecyclerViewScrollListener(manager) {
+                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                    if(!viewModel.endOfQueue) {
+                        viewModel.query.page++
+                        feed_progress.visibility = View.VISIBLE
+                        viewModel.getPosts()
+                    }
                 }
             }
-        }
 
-        feed_recycler.apply {
+            feed_recycler.apply {
 
-            layoutManager = manager
+                layoutManager = manager
 
-            addItemDecoration(divider)
+                addItemDecoration(divider)
 
-            addOnScrollListener(listener)
+                addOnScrollListener(listener)
 
-            adapter = feedAdapter
+                adapter = feedAdapter
+            }
+
         }
     }
 

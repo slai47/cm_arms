@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.cmarms.R
-import com.slai.cmarms.Utils
+import com.slai.cmarms.PrefUtils
 import com.slai.cmarms.model.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -38,7 +38,7 @@ class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : Recyc
     var singleOnly = false
     var storedPrefName = ""
 
-    val prefs : SharedPreferences = context.getSharedPreferences(Utils.PREFERENCE_FIELD, Context.MODE_PRIVATE)
+    val prefs : SharedPreferences = context.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)
 
     var selectedValue = ""
     var previousSelection = 0
