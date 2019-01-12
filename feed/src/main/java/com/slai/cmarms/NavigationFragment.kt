@@ -57,10 +57,11 @@ class NavigationFragment : Fragment() {
             navigation.initialise()
             setup = true
 
-            if(fragments.size == 0)
+            if(fragments.size == 0) {
                 fragments.add(FeedFragment())
                 fragments.add(FilterFragment())
                 fragments.add(SettingsFragment())
+            }
 
             navigation.setTabSelectedListener(object : BottomNavigationBar.OnTabSelectedListener {
                 override fun onTabReselected(position: Int) {
