@@ -38,6 +38,8 @@
     <string name="settings_github_summary">Check out the project and contribute!</string>
     <string name="premium_vendor">Premium Vendor</string>
     <string name="settings_feed_layout">Feed Item Style</string>
+    <string name="location_missed">Location didn\'t find its shot.</string>
+    <string name="geocode_missed">Geocode failed to hit the mark</string>
 
     <string-array name="themes">
         <item>Auto</item>
