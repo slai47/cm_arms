@@ -11,6 +11,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.slai.cmarms.model.NavigationEvent
 import com.slai.cmarms.model.NavigationTransitionEvent
+import com.slai.cmarms.model.Post
 import kotlinx.android.synthetic.main.fragment_nav.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -18,6 +19,8 @@ import org.greenrobot.eventbus.Subscribe
 class NavigationFragment : Fragment() {
 
     var setup = false
+
+    val fragments = ArrayList<Fragment>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_nav, container, false)
@@ -31,26 +34,34 @@ class NavigationFragment : Fragment() {
 
     fun setupNavigation(){
         if(!setup) {
+
+
             navigation.addItem(
                 BottomNavigationItem(
                     R.drawable.ic_dashboard,
                     R.string.title_home
-                ).setActiveColorResource(R.color.colorPrimary)
+                ).setActiveColorResource(R.color.colorAccent)
             )
             navigation.addItem(
                 BottomNavigationItem(R.drawable.ic_filter, R.string.title_search).setActiveColorResource(
-                    R.color.colorPrimary
+                    R.color.colorAccent
                 )
             )
             navigation.addItem(
                 BottomNavigationItem(
                     R.drawable.ic_settings,
                     R.string.title_settings
-                ).setActiveColorResource(R.color.colorPrimary)
+                ).setActiveColorResource(R.color.colorAccent)
             )
 
             navigation.initialise()
             setup = true
+
+            if(fragments.size == 0)
+                fragments.add(FeedFragment())
+                fragments.add(FilterFragment())
+                fragments.add(SettingsFragment())
+
             navigation.setTabSelectedListener(object : BottomNavigationBar.OnTabSelectedListener {
                 override fun onTabReselected(position: Int) {
                 }
@@ -60,26 +71,22 @@ class NavigationFragment : Fragment() {
 
                 override fun onTabSelected(position: Int) {
                     val replace: Boolean
-                    val frag: Fragment
                     val currentFrag = fragmentManager!!.findFragmentById(R.id.nav_container)
 
-                    when (position) {
+                    replace = when (position) {
                         0 -> {
-                            frag = FeedFragment()
-                            replace = currentFrag !is FeedFragment
+                            currentFrag !is FeedFragment
                         }
                         1 -> {
-                            frag = FilterFragment()
-                            replace = currentFrag !is FilterFragment
+                            currentFrag !is FilterFragment
                         }
                         else -> {
-                            frag = SettingsFragment()
-                            replace = currentFrag !is SettingsFragment
+                            currentFrag !is SettingsFragment
                         }
                     }
 
                     if (replace)
-                        fragmentManager!!.beginTransaction().replace(R.id.nav_container, frag!!).commit()
+                        fragmentManager!!.beginTransaction().replace(R.id.nav_container, fragments[position]).commit()
                 }
             })
             navigation.selectTab(0)

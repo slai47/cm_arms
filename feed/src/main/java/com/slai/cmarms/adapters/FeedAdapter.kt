@@ -13,9 +13,6 @@ import android.net.Uri
 import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
-import com.slai.cmarms.model.ProgressEvent
-import org.greenrobot.eventbus.EventBus
-import java.lang.StringBuilder
 
 
 class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
