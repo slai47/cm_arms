@@ -1,4 +1,8 @@
+
+
 # Unofficial ArmsList Android App
+
+![ArmsList App Icon](https://imgur.com/PUlSdLR.png)
 
 A instant android app using the bottom navigation bar for navigation, MVVM and MVP architectures when needed and Coroutines for threading and optimizations. Uses JSOUP to parse data but could be easily transfered to a thrid party API if given using Retrofit. Room is used to store data in a database in memory. Besides filtering, data is reset on relaunch of the app and filters are cleared out every launch. 
 

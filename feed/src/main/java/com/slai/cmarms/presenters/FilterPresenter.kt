@@ -24,28 +24,22 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-class FilterPresenter(var filterFragment: FilterFragment) : IDispose{
+class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
 
     companion object {
         val REQUEST_CODE = 47
     }
 
-    lateinit var geocoderApi : GeocoderApi
+    val geocoderApi by lazy { GeocoderApi(filterFragment.context!!) }
 
     private val filterDB = FiltersDataHolder()
 
-    private lateinit var fusedLocationClient : FusedLocationProviderClient
+    private val fusedLocationClient by lazy { LocationServices.getFusedLocationProviderClient(filterFragment.activity!!) }
 
-    val viewModel by lazy { ViewModelProviders.of(filterFragment.activity!!).get(CmarmsViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProviders.of(filterFragment.activity!!).get(CmarmsViewModel::class.java) }
 
     override fun dispose() {
         geocoderApi.dispose()
-    }
-
-    init {
-        geocoderApi = GeocoderApi(filterFragment.context!!)
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(filterFragment.activity!!)
     }
 
     fun createDialogs(vararg views : Button){
