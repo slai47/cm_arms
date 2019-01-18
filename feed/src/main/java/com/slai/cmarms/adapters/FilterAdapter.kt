@@ -10,12 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.slai.cmarms.R
 import com.slai.cmarms.PrefUtils
 import com.slai.cmarms.model.Filter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 
-class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : RecyclerView.Adapter<FilterViewHolder>() {
+class FilterAdapter(val context: Context, var array : ArrayList<Filter>) : RecyclerView.Adapter<FilterViewHolder>() {
 
     constructor(context: Context, array: ArrayList<Filter>, prefName : String?) : this(context, array) {
         if(prefName != null) {
@@ -42,6 +40,11 @@ class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : Recyc
 
     var selectedValue = ""
     var previousSelection = 0
+
+    var arrayCopy : ArrayList<Filter> = array
+
+    var job = Job()
+    val scope = CoroutineScope(Dispatchers.IO + job)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder {
         //setup different ones depending on type
@@ -88,6 +91,22 @@ class FilterAdapter(val context: Context, val array : ArrayList<Filter>) : Recyc
                 prefs.edit().putBoolean(preference, value).apply()
             }
             EventBus.getDefault().post(filter)
+        }
+    }
+
+    fun filter(filter : String){
+        if(!filter.isEmpty()) {
+            scope.launch {
+                array = array.filter {
+                    it.value.contains(filter)
+                } as ArrayList
+                scope.launch(Dispatchers.Main){
+                    notifyDataSetChanged()
+                }
+            }
+        } else {
+            array = arrayCopy
+            notifyDataSetChanged()
         }
     }
 }

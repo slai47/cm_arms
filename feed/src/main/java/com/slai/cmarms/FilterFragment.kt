@@ -42,6 +42,11 @@ class FilterFragment : Fragment() {
         super.onResume()
         EventBus.getDefault().register(this)
 
+        filter_category.tag = SelectFilterFragment.EXTRA_CATEGORIES
+        filter_caliber.tag = SelectFilterFragment.EXTRA_CALIBERS
+        filter_firearm_type.tag = SelectFilterFragment.EXTRA_TYPES
+        filter_action_type.tag = SelectFilterFragment.EXTRA_ACTIONS
+
         presenter.createDialogs(filter_category, filter_caliber, filter_firearm_type, filter_action_type)
 
         presenter.setupSearchReset(filter_search, filter_reset)

@@ -5,19 +5,16 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Location
+import android.os.Bundle
 import android.widget.Button
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.slai.cmarms.FilterFragment
-import com.slai.cmarms.FiltersDataHolder
-import com.slai.cmarms.PrefUtils
-import com.slai.cmarms.R
+import com.slai.cmarms.*
 import com.slai.cmarms.adapters.FilterAdapter
 import com.slai.cmarms.backend.GeocoderApi
 import com.slai.cmarms.interfaces.IDispose
 import com.slai.cmarms.model.*
-import com.slai.cmarms.view.DialogRecyclerView
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -32,8 +29,6 @@ class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
 
     val geocoderApi by lazy { GeocoderApi(filterFragment.context!!) }
 
-    private val filterDB = FiltersDataHolder()
-
     private val fusedLocationClient by lazy { LocationServices.getFusedLocationProviderClient(filterFragment.activity!!) }
 
     private val viewModel by lazy { ViewModelProviders.of(filterFragment.activity!!).get(CmarmsViewModel::class.java) }
@@ -42,31 +37,22 @@ class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
         geocoderApi.dispose()
     }
 
-    fun createDialogs(vararg views : Button){
-        setupDialog(views[0], filterDB.categories, filterFragment.getString(R.string.categories_title), PrefUtils.PREF_CATEGORY)
-        setupDialog(views[1], filterDB.calibers, filterFragment.getString(R.string.caliber_title), null)
-        setupDialog(views[2], filterDB.firearmTypes, filterFragment.getString(R.string.firearm_type_title), PrefUtils.PREF_FIREARM_TYPE)
-        setupDialog(views[3], filterDB.actions, filterFragment.getString(R.string.action_type_title), PrefUtils.PREF_ACTION_TYPE)
-    }
-
-    private fun setupDialog(button : Button, filters : ArrayList<Filter>, title : String, prefName : String?) {
-        val context = button.context
-        button.setOnClickListener {
-            val adapter = FilterAdapter(context, filters, prefName)
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(title)
-            val recyclerView = DialogRecyclerView(context)
-            recyclerView.setAdapter(adapter)
-            builder.setView(recyclerView)
-            builder.setPositiveButton(context.getString(R.string.ok)) { dialog, which ->
-                dialog.dismiss()
+    fun createDialogs(vararg views : Button) {
+        views.forEach {
+            it.setOnClickListener {
+                val tag = it.tag as String
+                val manager = filterFragment.fragmentManager
+                val bundle = Bundle()
+                bundle.putString(SelectFilterFragment.EXTRA_FILTERS, tag)
+                val fragment = SelectFilterFragment()
+                fragment.arguments = bundle
+                manager!!.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_up, R.anim.slide_down).add(R.id.container, SelectFilterFragment())
+                    .addToBackStack(tag).commit()
             }
-            builder.setOnDismissListener {
-                EventBus.getDefault().post(FilterDialogClosed(title))
-            }
-            builder.show()
         }
     }
+
 
     fun getLocation(){
         filterFragment.updateLocationButton(false)

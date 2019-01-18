@@ -28,7 +28,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'androidx.preference:preference-ktx:1.1.0-alpha02'
 
-    implementation "com.google.android.gms:play-services-location:+"
+    implementation "com.google.android.gms:play-services-location:16.0.0"
 
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.1.0'
 }

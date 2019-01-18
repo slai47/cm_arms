@@ -7,6 +7,7 @@
         filter by andriwidodo from the Noun Project\n\n
         Settings by Ron Scott from the Noun Project\n\n
         Location by Rainbow Designs from the Noun Project\n\n
+        clear by wayneraymond from the Noun Project\n\n
     </string>
     <string name="search_keyword">Search Keyword</string>
     <string name="location">Location</string>
@@ -40,6 +41,7 @@
     <string name="settings_feed_layout">Feed Item Style</string>
     <string name="location_missed">Location didn\'t find its shot.</string>
     <string name="geocode_missed">Geocode failed to hit the mark</string>
+    <string name="filter">Filter</string>
 
     <string-array name="themes">
         <item>Auto</item>
