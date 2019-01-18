@@ -42,6 +42,7 @@
     <string name="location_missed">Location didn\'t find its shot.</string>
     <string name="geocode_missed">Geocode failed to hit the mark</string>
     <string name="filter">Filter</string>
+    <string name="refresh">Refresh</string>
 
     <string-array name="themes">
         <item>Auto</item>

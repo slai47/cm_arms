@@ -47,7 +47,8 @@ class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
                 val fragment = SelectFilterFragment()
                 fragment.arguments = bundle
                 manager!!.beginTransaction()
-                    .setCustomAnimations(R.anim.slide_up, R.anim.slide_down).add(R.id.container, fragment)
+                    .setCustomAnimations(R.anim.slide_up, R.anim.slide_down, R.anim.slide_up, R.anim.slide_down)
+                    .add(R.id.container, fragment)
                     .addToBackStack(tag).commit()
             }
         }

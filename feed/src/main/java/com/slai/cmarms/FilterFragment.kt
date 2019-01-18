@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.model.*
 import com.slai.cmarms.presenters.FilterPresenter
 import com.slai.cmarms.viewmodel.CmarmsViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_nav.*
 import kotlinx.android.synthetic.main.snippet_filter.*
 import kotlinx.coroutines.GlobalScope
@@ -209,19 +210,6 @@ class FilterFragment : Fragment() {
         setViewModelItems()
         EventBus.getDefault().unregister(this)
         presenter.dispose()
-    }
-
-    @Subscribe
-    fun onFilterChange(filter : Filter) {
-        val snack = Snackbar.make(nav_container, "${filter.value} was changed", Snackbar.LENGTH_SHORT).show()
-        GlobalScope.launch {
-            val prefs = context?.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
-            if(prefs.getBoolean(filter.value, false)){
-                viewModel.query.filters[filter.value] = filter
-            } else {
-                viewModel.query.filters.remove(filter.value)
-            }
-        }
     }
 
     fun showSnackbar(text : String){

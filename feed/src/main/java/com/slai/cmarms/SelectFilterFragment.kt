@@ -2,17 +2,29 @@ package com.slai.cmarms
 
 import android.content.Context
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FilterAdapter
 import com.slai.cmarms.model.Filter
+import com.slai.cmarms.model.FilterDialogClosed
+import com.slai.cmarms.viewmodel.CmarmsViewModel
+import kotlinx.android.synthetic.main.fragment_nav.*
 import kotlinx.android.synthetic.main.fragment_select_filter.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class SelectFilterFragment : Fragment() {
 
@@ -23,6 +35,8 @@ class SelectFilterFragment : Fragment() {
         const val EXTRA_TYPES = "types"
         const val EXTRA_ACTIONS = "actions"
     }
+
+    val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
 
     lateinit var manager : LinearLayoutManager
     var adapter : FilterAdapter? = null
@@ -44,10 +58,16 @@ class SelectFilterFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        EventBus.getDefault().register(this)
 
         setupAdapter()
 
         setupFilter()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
     }
 
     private fun setupFilter() {
@@ -68,8 +88,36 @@ class SelectFilterFragment : Fragment() {
         }
 
         filter_dismiss.setOnClickListener{
-            activity?.onBackPressed()
+            goBack()
         }
+
+        filter_area.setOnClickListener{
+            goBack()
+        }
+
+        filter_refresh.visibility = if(filterBy == EXTRA_CALIBERS){
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
+
+        filter_refresh.setOnClickListener {
+            filter_refresh.visibility = View.INVISIBLE
+            GlobalScope.launch {
+                viewModel.reset(filter_refresh.context)
+                withContext(Dispatchers.Main){
+                    adapter!!.notifyDataSetChanged()
+                    viewModel.query.filters.clear()
+                    filter_refresh.visibility = View.VISIBLE
+
+                }
+            }
+        }
+    }
+
+    private fun goBack() {
+        fragmentManager!!.popBackStack()
+        EventBus.getDefault().post(FilterDialogClosed(filterBy))
     }
 
     private fun setupAdapter() {
@@ -111,6 +159,19 @@ class SelectFilterFragment : Fragment() {
             adapter = FilterAdapter(context, filters, prefName)
 
             filter_recycler.adapter = adapter
+        }
+    }
+
+    @Subscribe
+    fun onFilterChange(filter : Filter) {
+        val snack = Snackbar.make(filter_area, "${filter.value} was changed", Snackbar.LENGTH_SHORT).show()
+        GlobalScope.launch {
+            val prefs = context?.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
+            if(prefs.getBoolean(filter.value, false)) {
+                viewModel.query.filters[filter.value] = filter
+            } else {
+                viewModel.query.filters.remove(filter.value)
+            }
         }
     }
 
