@@ -43,11 +43,11 @@ class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
                 val tag = it.tag as String
                 val manager = filterFragment.fragmentManager
                 val bundle = Bundle()
-                bundle.putString(SelectFilterFragment.EXTRA_FILTERS, tag)
+                bundle.putString(SelectFilterFragment.EXTRA_FILTER, tag)
                 val fragment = SelectFilterFragment()
                 fragment.arguments = bundle
                 manager!!.beginTransaction()
-                    .setCustomAnimations(R.anim.slide_up, R.anim.slide_down).add(R.id.container, SelectFilterFragment())
+                    .setCustomAnimations(R.anim.slide_up, R.anim.slide_down).add(R.id.container, fragment)
                     .addToBackStack(tag).commit()
             }
         }

@@ -1,5 +1,6 @@
 package com.slai.cmarms
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_select_filter.*
 class SelectFilterFragment : Fragment() {
 
     companion object {
-        const val EXTRA_FILTERS = "filter"
+        const val EXTRA_FILTER = "filter"
         const val EXTRA_CATEGORIES = "categories"
         const val EXTRA_CALIBERS = "calibers"
         const val EXTRA_TYPES = "types"
@@ -28,10 +29,17 @@ class SelectFilterFragment : Fragment() {
 
     private val filterDB = FiltersDataHolder()
 
-    val filterBy : String by lazy { arguments!!.getString(EXTRA_FILTERS) }
+    lateinit var filterBy : String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_recycler, container, false)
+        return inflater.inflate(R.layout.fragment_select_filter, container, false)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        arguments?.getString(EXTRA_FILTER)?.let {
+            filterBy = it
+        }
     }
 
     override fun onResume() {
@@ -57,6 +65,10 @@ class SelectFilterFragment : Fragment() {
 
         filter_clear.setOnClickListener {
             filter_text.setText("")
+        }
+
+        filter_dismiss.setOnClickListener{
+            activity?.onBackPressed()
         }
     }
 
