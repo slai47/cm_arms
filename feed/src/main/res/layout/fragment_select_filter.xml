@@ -32,23 +32,14 @@
                       tools:text="Select Caliber"
                       app:layout_constraintTop_toTopOf="parent"
                       style="@style/PrimaryText"
+                      android:textColor="@color/colorAccent"
             />
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:id="@+id/filter_recycler"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintTop_toBottomOf="@id/filter_title"
-                    app:layout_constraintBottom_toTopOf="@id/filter_text_area"
-            >
-            </androidx.recyclerview.widget.RecyclerView>
 
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/filter"
-                    app:layout_constraintBottom_toTopOf="@id/filter_dismiss"
+                    app:layout_constraintTop_toBottomOf="@+id/filter_title"
                     android:id="@+id/filter_text_area"
                     android:layout_marginRight="40dp"
                     android:layout_marginEnd="40dp"
@@ -68,10 +59,24 @@
                     android:padding="12dp"
                     app:srcCompat="@drawable/ic_clear"
                     android:background="@drawable/ripple_background"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:layout_constraintTop_toTopOf="@id/filter_text_area"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="5dp"
             />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/filter_recycler"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/filter_text_area"
+                    app:layout_constraintBottom_toTopOf="@id/filter_refresh"
+            >
+            </androidx.recyclerview.widget.RecyclerView>
+
+
 
             <TextView
                     android:layout_width="wrap_content"

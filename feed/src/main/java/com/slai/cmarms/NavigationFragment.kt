@@ -87,7 +87,7 @@ class NavigationFragment : Fragment() {
                     }
 
                     if (replace)
-                        fragmentManager!!.beginTransaction().replace(R.id.nav_container, fragments[position]).commit()
+                        fragmentManager!!.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out).replace(R.id.nav_container, fragments[position]).commit()
                 }
             })
             navigation.selectTab(0)
