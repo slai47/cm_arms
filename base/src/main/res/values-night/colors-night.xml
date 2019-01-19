@@ -10,4 +10,6 @@
     <color name="bottom_navigation_background">#2d1e1a</color>
 
     <color name="premium">#FFC107</color>
+
+    <color name="card_view_background">#291a17</color>
 </resources>

@@ -18,6 +18,7 @@
             android:layout_margin="5dp"
             app:cardElevation="6dp"
             android:clickable="false"
+            app:cardBackgroundColor="@color/card_view_background"
     >
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

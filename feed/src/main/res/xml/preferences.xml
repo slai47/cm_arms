@@ -25,10 +25,6 @@
                           android:title="@string/settings_reset"
                           android:summary="Clear query information and settings"/>
 
-        <PreferenceScreen
-            android:title="@string/data_policy_title"
-            android:summary=""/>
-
     </PreferenceCategory>
 
     <PreferenceCategory

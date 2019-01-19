@@ -23,4 +23,6 @@
     <color name="red">#ffff0000</color>
     <color name="premium">#ff9807</color>
 
+    <color name="card_view_background">#EFEFEF</color>
+
 </resources>
