@@ -28,3 +28,7 @@ MVP to clean up the Geocode API out of the FilterFragment.
 ## Information
 
 This app was just another app for me to test my skills (Kotlin, Retrofit Room, MVVM+MVP and instant app) and make something I wanted for myself and potentially others. ArmsList.com mobile website and searching on mobile is a bit poor as of Nov 2018, so I went about making an app for them potentially to instantly load on a phone and help simplify their mobile app experience. If you are from ArmsList and want to chat more, contact me and we can make this more official. Would love to help with that. Yes this app scraps the website. I would absolutely love to have an API endpoint to hit and it wouldn't take me long to change that.
+
+## In App Photos
+
+[App Photos](https://imgur.com/a/QNSACdR)
