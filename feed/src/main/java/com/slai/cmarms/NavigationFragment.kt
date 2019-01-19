@@ -22,6 +22,8 @@ class NavigationFragment : Fragment() {
 
     val fragments = ArrayList<Fragment>()
 
+    var previousFragment: Int? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_nav, container, false)
     }
@@ -86,8 +88,21 @@ class NavigationFragment : Fragment() {
                         }
                     }
 
-                    if (replace)
-                        fragmentManager!!.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out).replace(R.id.nav_container, fragments[position]).commit()
+                    if (replace) {
+                        var animIn = R.anim.slide_left_in
+                        var animOut = R.anim.slide_left_out
+                        if(previousFragment != null){
+                            if(position < previousFragment!!) {
+                                animIn = R.anim.slide_right_in
+                                animOut = R.anim.slide_right_out
+                            }
+                        }
+
+                        previousFragment = position
+                        fragmentManager!!.beginTransaction()
+                            .setCustomAnimations(animIn, animOut, animIn, animOut)
+                            .replace(R.id.nav_container, fragments[position]).commit()
+                    }
                 }
             })
             navigation.selectTab(0)
