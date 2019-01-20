@@ -12,6 +12,7 @@ import com.slai.cmarms.model.Post
 import android.net.Uri
 import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
+import com.bumptech.glide.GenericTransitionOptions
 import com.bumptech.glide.Glide
 
 
@@ -56,7 +57,7 @@ class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
         holder.saleType.text = current.saleType
 
         if(resId != R.layout.list_feed_text)
-            Glide.with(holder.image).load(current.image).into(holder.image)
+            Glide.with(holder.image).load(current.image).transition(GenericTransitionOptions.with(R.anim.fade_in)).into(holder.image)
 
         holder.premium.visibility = if(current.premium) View.VISIBLE
                                     else View.INVISIBLE

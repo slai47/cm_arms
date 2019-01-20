@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -23,6 +24,9 @@ import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import android.view.animation.AnimationUtils.loadLayoutAnimation
+
+
 
 class FeedFragment : Fragment() {
 
@@ -42,7 +46,12 @@ class FeedFragment : Fragment() {
         Log.d(FeedFragment::class.java.simpleName, "Live Data updated size = ${it.size}")
 
         // find the difference and only add new ones.
+        val firstTime = feedAdapter.posts.isEmpty()
+        if(firstTime)
+            runLayoutAnimation(feed_recycler)
         feedAdapter.addPosts(it)
+        if(firstTime)
+            feed_recycler.scheduleLayoutAnimation()
 
         if(it.size != 0)
             EventBus.getDefault().post(ProgressEvent(false))
@@ -84,8 +93,10 @@ class FeedFragment : Fragment() {
             }
             if(resId != feedAdapter.resId){
                 feedAdapter.resId = resId
+                runLayoutAnimation(feed_recycler)
+                feedAdapter.notifyDataSetChanged()
+                feed_recycler.scheduleLayoutAnimation()
             }
-            feedAdapter.notifyDataSetChanged()
         } else {
             manager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
@@ -122,8 +133,14 @@ class FeedFragment : Fragment() {
 
                 adapter = feedAdapter
             }
-
         }
+    }
+
+    private fun runLayoutAnimation(recyclerView: RecyclerView) {
+        val context = recyclerView.context
+        val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_anim_fall_in)
+
+        recyclerView.layoutAnimation = controller
     }
 
     override fun onPause() {
