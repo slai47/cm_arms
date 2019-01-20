@@ -12,4 +12,6 @@
     <color name="premium">#FFC107</color>
 
     <color name="card_view_background">#291a17</color>
+
+    <color name="filter_card">#2F201C</color>
 </resources>

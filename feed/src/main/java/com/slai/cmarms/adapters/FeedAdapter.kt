@@ -1,5 +1,6 @@
 package com.slai.cmarms.adapters
 
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,19 +12,32 @@ import com.slai.cmarms.R
 import com.slai.cmarms.model.Post
 import android.net.Uri
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.GenericTransitionOptions
 import com.bumptech.glide.Glide
+import com.slai.cmarms.R.id.card_wrapper
 
 
-class FeedAdapter : RecyclerView.Adapter<FeedViewHolder>() {
+class FeedAdapter(val context: Context) : RecyclerView.Adapter<FeedViewHolder>() {
 
     var posts = ArrayList<Post>()
 
     var resId = R.layout.list_feed_regular
 
+    var cardWrapped : Boolean = context
+        .getSharedPreferences(context.getPackageName() + "_preferences", Context.MODE_PRIVATE)
+        .getBoolean("card_wrapped", false)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
-        return FeedViewHolder(LayoutInflater.from(parent.context).inflate(resId, parent, false))
+        return if(!cardWrapped)
+            FeedViewHolder(LayoutInflater.from(parent.context).inflate(resId, parent, false))
+        else {
+            val wrapper = LayoutInflater.from(context).inflate(R.layout.snippet_card_wrapper, parent, false)
+            val layout = LayoutInflater.from(context).inflate(resId, parent, false)
+            (wrapper.findViewById(R.id.card_wrapper) as CardView).addView(layout)
+            FeedViewHolder(wrapper)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -1,5 +1,6 @@
 package com.slai.cmarms
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -93,6 +94,9 @@ class FeedFragment : Fragment() {
             }
             if(resId != feedAdapter.resId){
                 feedAdapter.resId = resId
+                feedAdapter.cardWrapped = context!!
+                    .getSharedPreferences(context!!.getPackageName() + "_preferences", Context.MODE_PRIVATE)
+                    .getBoolean("card_wrapped", false)
                 runLayoutAnimation(feed_recycler)
                 feedAdapter.notifyDataSetChanged()
                 feed_recycler.scheduleLayoutAnimation()
@@ -100,7 +104,7 @@ class FeedFragment : Fragment() {
         } else {
             manager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-            feedAdapter = FeedAdapter()
+            feedAdapter = FeedAdapter(context!!)
 
             val prefs = PrefUtils.getLayoutStyle(context!!)
             feedAdapter.resId = when(prefs){
@@ -109,6 +113,10 @@ class FeedFragment : Fragment() {
                 PrefUtils.LayoutStyle.SMALL -> R.layout.list_feed_small
                 PrefUtils.LayoutStyle.TEXT -> R.layout.list_feed_text
             }
+
+            val cardWrapped = context!!
+                .getSharedPreferences(context!!.getPackageName() + "_preferences", Context.MODE_PRIVATE)
+                .getBoolean("card_wrapped", false)
 
             val divider = DividerItemDecoration(feed_recycler.context, DividerItemDecoration.VERTICAL)
             divider.setDrawable(ContextCompat.getDrawable(feed_recycler.context, R.drawable.shape_divider)!!)
@@ -127,7 +135,8 @@ class FeedFragment : Fragment() {
 
                 layoutManager = manager
 
-                addItemDecoration(divider)
+                if(!cardWrapped)
+                    addItemDecoration(divider)
 
                 addOnScrollListener(listener)
 

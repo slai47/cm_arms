@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProviders
-import androidx.preference.ListPreference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceScreen
+import androidx.preference.*
 import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.android.synthetic.main.fragment_nav.*
@@ -57,6 +55,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 Snackbar.make(nav_container.getChildAt(0), "Reset Query and Posts", Snackbar.LENGTH_SHORT).show()
             }
             true
+        }
+
+        val cardWrapped = findPreference<SwitchPreference>("card_wrapped")
+        cardWrapped.summaryProvider = object : Preference.SummaryProvider<SwitchPreference> {
+            override fun provideSummary(preference: SwitchPreference?): CharSequence {
+                return if(preference!!.isChecked) getString(R.string.settings_summary_card_wrapped_on)
+                        else getString(R.string.settings_summary_card_wrapped_off)
+            }
+
         }
     }
 }

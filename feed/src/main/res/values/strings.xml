@@ -43,6 +43,9 @@
     <string name="geocode_missed">Geocode failed to hit the mark</string>
     <string name="filter">Filter</string>
     <string name="refresh">Refresh</string>
+    <string name="setting_card_wrapped">Card Wrapped</string>
+    <string name="settings_summary_card_wrapped_on">Items are wrapped in Cards.</string>
+    <string name="settings_summary_card_wrapped_off">Wrap list items in a card.</string>
 
     <string-array name="themes">
         <item>Auto</item>

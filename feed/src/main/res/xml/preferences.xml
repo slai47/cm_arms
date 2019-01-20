@@ -17,6 +17,11 @@
                         android:defaultValue="STANDARD"
         />
 
+        <SwitchPreference
+                        android:title="@string/setting_card_wrapped"
+                        android:key="card_wrapped"
+                        android:defaultValue="false"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
