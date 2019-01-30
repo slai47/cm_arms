@@ -14,6 +14,7 @@ import com.slai.cmarms.*
 import com.slai.cmarms.adapters.FilterAdapter
 import com.slai.cmarms.backend.GeocoderApi
 import com.slai.cmarms.interfaces.IDispose
+import com.slai.cmarms.interfaces.IFilter
 import com.slai.cmarms.model.*
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,17 +22,17 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
+class FilterPresenter(val filter : IFilter) : IDispose{
 
     companion object {
         val REQUEST_CODE = 47
     }
 
-    val geocoderApi by lazy { GeocoderApi(filterFragment.context!!) }
+    val geocoderApi by lazy { GeocoderApi(filter.getFragmentActivity()) }
 
-    private val fusedLocationClient by lazy { LocationServices.getFusedLocationProviderClient(filterFragment.activity!!) }
+    private val fusedLocationClient by lazy { LocationServices.getFusedLocationProviderClient(filter.getFragmentActivity()) }
 
-    private val viewModel by lazy { ViewModelProviders.of(filterFragment.activity!!).get(CmarmsViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProviders.of(filter.getFragmentActivity()).get(CmarmsViewModel::class.java) }
 
     override fun dispose() {
         geocoderApi.dispose()
@@ -41,7 +42,7 @@ class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
         views.forEach {
             it.setOnClickListener {
                 val tag = it.tag as String
-                val manager = filterFragment.fragmentManager
+                val manager = filter.getFragmentManager()
                 val bundle = Bundle()
                 bundle.putString(SelectFilterFragment.EXTRA_FILTER, tag)
                 val fragment = SelectFilterFragment()
@@ -56,20 +57,20 @@ class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
 
 
     fun getLocation(){
-        filterFragment.updateLocationButton(false)
+        filter.updateLocationButton(false)
         fusedLocationClient.lastLocation.addOnSuccessListener {location : Location ->
             geocoderApi.getAddress(location) { address: Address? ->
                 if(address != null){
                     val state = address.adminArea
-                    filterFragment.setLocation(state)
+                    filter.setLocation(state)
                 } else {
-                    filterFragment.showSnackbar(filterFragment.getString(R.string.geocode_missed))
+                    filter.showSnackbar(filter.getString(R.string.geocode_missed))
                 }
-                filterFragment.updateLocationButton(true)
+                filter.updateLocationButton(true)
             }
         }.addOnFailureListener {
-            filterFragment.showSnackbar(filterFragment.getString(R.string.location_missed))
-            filterFragment.updateLocationButton(false)
+            filter.showSnackbar(filter.getString(R.string.location_missed))
+            filter.updateLocationButton(false)
         }
     }
 
@@ -83,18 +84,18 @@ class FilterPresenter(val filterFragment: FilterFragment) : IDispose{
 
     fun setupSearchReset(search : Button, reset : Button) {
         search.setOnClickListener {
-            filterFragment.setViewModelItems()
+            filter.setViewModelItems()
             viewModel.clearPosts()
             EventBus.getDefault().post(NavigationTransitionEvent(NavigationEvent.FEED))
         }
         reset.setOnClickListener {
             GlobalScope.launch(Dispatchers.IO) {
-                viewModel.reset(filterFragment.context!!)
+                viewModel.reset(filter.getFragmentActivity())
             }
             viewModel.clearPosts()
-            val prefs = filterFragment.context?.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
+            val prefs = filter.getFragmentActivity().getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
             prefs.edit().remove(PrefUtils.PREF_CATEGORY).remove(PrefUtils.PREF_ACTION_TYPE).remove(PrefUtils.PREF_FIREARM_TYPE).apply()
-            filterFragment.searchReset()
+            filter.searchReset()
         }
     }
 }

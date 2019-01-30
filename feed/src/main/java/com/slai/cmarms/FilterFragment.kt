@@ -10,8 +10,11 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
+import com.slai.cmarms.interfaces.IFilter
 import com.slai.cmarms.model.*
 import com.slai.cmarms.presenters.FilterPresenter
 import com.slai.cmarms.viewmodel.CmarmsViewModel
@@ -23,7 +26,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-class FilterFragment : Fragment() {
+class FilterFragment : Fragment(), IFilter {
 
     val HAS_CHECKED_LOCATION = "hasCheckedLocationPermissions1"
 
@@ -71,7 +74,7 @@ class FilterFragment : Fragment() {
         }
     }
 
-    fun updateLocationButton(on : Boolean){
+    override fun updateLocationButton(on : Boolean){
         if(on){
             filter_location_icon.isEnabled = true
             filter_location_icon.setImageResource(R.drawable.ic_location_active)
@@ -145,7 +148,7 @@ class FilterFragment : Fragment() {
         }
     }
 
-    fun searchReset() {
+    override fun searchReset() {
         updateButtonText(FilterDialogClosed(""))
         filter_search_text.text = null
         filter_location.setText(Query.DEFAULT_LOCATION)
@@ -154,7 +157,7 @@ class FilterFragment : Fragment() {
         updateLocationButton(true)
     }
 
-    fun setViewModelItems() {
+    override fun setViewModelItems() {
         val search = filter_search_text.text.toString().trim()
         val lowPrice = filter_low_price.text.toString().trim()
         val highPrice = filter_high_price.text.toString().trim()
@@ -212,11 +215,17 @@ class FilterFragment : Fragment() {
         presenter.dispose()
     }
 
-    fun showSnackbar(text : String){
+    override fun showSnackbar(text : String){
         Snackbar.make(filter_caliber, text, Snackbar.LENGTH_SHORT).show()
     }
 
-    fun setLocation(text : String){
+    override fun setLocation(text : String){
         filter_location.setText(text)
     }
+
+    override fun getFragmentActivity(): FragmentActivity {
+        return activity!!
+    }
+
+
 }
