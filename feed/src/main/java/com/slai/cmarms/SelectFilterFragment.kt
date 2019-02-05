@@ -2,7 +2,6 @@ package com.slai.cmarms
 
 import android.content.Context
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import com.slai.cmarms.adapters.FilterAdapter
 import com.slai.cmarms.model.Filter
 import com.slai.cmarms.model.FilterDialogClosed
 import com.slai.cmarms.viewmodel.CmarmsViewModel
-import kotlinx.android.synthetic.main.fragment_nav.*
 import kotlinx.android.synthetic.main.fragment_select_filter.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -164,7 +162,6 @@ class SelectFilterFragment : Fragment() {
 
     @Subscribe
     fun onFilterChange(filter : Filter) {
-        val snack = Snackbar.make(filter_area, "${filter.value} was changed", Snackbar.LENGTH_SHORT).show()
         GlobalScope.launch {
             val prefs = context?.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE)!!
             if(prefs.getBoolean(filter.value, false)) {

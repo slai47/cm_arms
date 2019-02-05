@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.slai.cmarms.model.NavigationEvent
 import com.slai.cmarms.model.NavigationTransitionEvent
-import com.slai.cmarms.model.Post
 import kotlinx.android.synthetic.main.fragment_nav.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

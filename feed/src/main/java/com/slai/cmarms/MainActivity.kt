@@ -18,13 +18,11 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().add(R.id.container, NavigationFragment()).commit()
     }
 
-    fun setupDayNightMode() {
+    private fun setupDayNightMode() {
         val mode = PrefUtils.getDayNightMode(application)
         var delegateMode = AppCompatDelegate.MODE_NIGHT_AUTO
-        when (mode) {
-            PrefUtils.DayNightMode.DAY -> delegateMode = AppCompatDelegate.MODE_NIGHT_NO
-            PrefUtils.DayNightMode.NIGHT -> delegateMode = AppCompatDelegate.MODE_NIGHT_YES
-        }
+        if (mode == PrefUtils.DayNightMode.DAY) delegateMode = AppCompatDelegate.MODE_NIGHT_NO
+        else if (mode == PrefUtils.DayNightMode.NIGHT) delegateMode = AppCompatDelegate.MODE_NIGHT_YES
 
         AppCompatDelegate.setDefaultNightMode(delegateMode)
     }

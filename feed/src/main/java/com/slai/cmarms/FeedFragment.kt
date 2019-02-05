@@ -21,12 +21,11 @@ import com.slai.cmarms.model.Post
 import com.slai.cmarms.model.ProgressEvent
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.android.synthetic.main.fragment_feed.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import android.view.animation.AnimationUtils.loadLayoutAnimation
-
 
 
 class FeedFragment : Fragment() {
@@ -84,8 +83,9 @@ class FeedFragment : Fragment() {
     }
 
     private fun setupAdapter() {
+        val ctx = context!!
         if(feed_recycler.adapter != null){
-            val prefs = PrefUtils.getLayoutStyle(context!!)
+            val prefs = PrefUtils.getLayoutStyle(ctx)
             val resId = when(prefs){
                 PrefUtils.LayoutStyle.STANDARD -> R.layout.list_feed_regular
                 PrefUtils.LayoutStyle.LARGE -> R.layout.list_feed_large
@@ -94,15 +94,15 @@ class FeedFragment : Fragment() {
             }
             if(resId != feedAdapter.resId){
                 feedAdapter.resId = resId
-                feedAdapter.cardWrapped = context!!
-                    .getSharedPreferences(context!!.getPackageName() + "_preferences", Context.MODE_PRIVATE)
+                feedAdapter.cardWrapped = ctx
+                    .getSharedPreferences(ctx.packageName + "_preferences", Context.MODE_PRIVATE)
                     .getBoolean("card_wrapped", false)
                 runLayoutAnimation(feed_recycler)
                 feedAdapter.notifyDataSetChanged()
                 feed_recycler.scheduleLayoutAnimation()
             }
         } else {
-            manager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            manager = LinearLayoutManager(ctx, RecyclerView.VERTICAL, false)
 
             feedAdapter = FeedAdapter(context!!)
 
@@ -114,12 +114,12 @@ class FeedFragment : Fragment() {
                 PrefUtils.LayoutStyle.TEXT -> R.layout.list_feed_text
             }
 
-            val cardWrapped = context!!
-                .getSharedPreferences(context!!.getPackageName() + "_preferences", Context.MODE_PRIVATE)
+            val cardWrapped = ctx
+                .getSharedPreferences(ctx.packageName + "_preferences", Context.MODE_PRIVATE)
                 .getBoolean("card_wrapped", false)
 
-            val divider = DividerItemDecoration(feed_recycler.context, DividerItemDecoration.VERTICAL)
-            divider.setDrawable(ContextCompat.getDrawable(feed_recycler.context, R.drawable.shape_divider)!!)
+            val divider = DividerItemDecoration(ctx, DividerItemDecoration.VERTICAL)
+            divider.setDrawable(ContextCompat.getDrawable(ctx, R.drawable.shape_divider)!!)
 
             val listener = object : EndlessRecyclerViewScrollListener(manager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {

@@ -7,8 +7,7 @@ class Converters {
 
     @TypeConverter
     fun toTimeStamp(value : Long) : Date? {
-        return if(value == null) null
-                else Date(value)
+        return Date(value)
     }
 
     @TypeConverter

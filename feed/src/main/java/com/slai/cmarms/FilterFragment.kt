@@ -11,18 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.interfaces.IFilter
-import com.slai.cmarms.model.*
+import com.slai.cmarms.model.FilterDialogClosed
+import com.slai.cmarms.model.Query
 import com.slai.cmarms.presenters.FilterPresenter
 import com.slai.cmarms.viewmodel.CmarmsViewModel
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_nav.*
 import kotlinx.android.synthetic.main.snippet_filter.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
@@ -63,7 +59,7 @@ class FilterFragment : Fragment(), IFilter {
     }
 
     private fun setupLocation() {
-        if(viewModel.query.location?.isNullOrEmpty())
+        if(viewModel.query.location.isEmpty())
             checkLocationPermissionsOrGetLocation()
 
         updateLocationButton(true)
@@ -215,12 +211,12 @@ class FilterFragment : Fragment(), IFilter {
         presenter.dispose()
     }
 
-    override fun showSnackbar(text : String){
-        Snackbar.make(filter_caliber, text, Snackbar.LENGTH_SHORT).show()
+    override fun showSnackbar(message : String){
+        Snackbar.make(filter_caliber, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun setLocation(text : String){
-        filter_location.setText(text)
+    override fun setLocation(state : String){
+        filter_location.setText(state)
     }
 
     override fun getFragmentActivity(): FragmentActivity {

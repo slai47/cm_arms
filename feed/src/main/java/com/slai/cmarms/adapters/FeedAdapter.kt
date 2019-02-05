@@ -2,21 +2,20 @@ package com.slai.cmarms.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.slai.cmarms.R
-import com.slai.cmarms.model.Post
-import android.net.Uri
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.GenericTransitionOptions
 import com.bumptech.glide.Glide
-import com.slai.cmarms.R.id.card_wrapper
+import com.slai.cmarms.R
+import com.slai.cmarms.model.Post
 
 
 class FeedAdapter(val context: Context) : RecyclerView.Adapter<FeedViewHolder>() {

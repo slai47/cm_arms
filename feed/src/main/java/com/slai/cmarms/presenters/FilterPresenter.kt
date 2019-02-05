@@ -1,6 +1,5 @@
 package com.slai.cmarms.presenters
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
@@ -8,14 +7,15 @@ import android.location.Location
 import android.os.Bundle
 import android.widget.Button
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.slai.cmarms.*
-import com.slai.cmarms.adapters.FilterAdapter
+import com.slai.cmarms.PrefUtils
+import com.slai.cmarms.R
+import com.slai.cmarms.SelectFilterFragment
 import com.slai.cmarms.backend.GeocoderApi
 import com.slai.cmarms.interfaces.IDispose
 import com.slai.cmarms.interfaces.IFilter
-import com.slai.cmarms.model.*
+import com.slai.cmarms.model.NavigationEvent
+import com.slai.cmarms.model.NavigationTransitionEvent
 import com.slai.cmarms.viewmodel.CmarmsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

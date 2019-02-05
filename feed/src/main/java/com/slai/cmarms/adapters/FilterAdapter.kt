@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
-import com.slai.cmarms.R
 import com.slai.cmarms.PrefUtils
+import com.slai.cmarms.R
 import com.slai.cmarms.model.Filter
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
@@ -65,14 +65,14 @@ class FilterAdapter(val context: Context, var array : ArrayList<Filter>) : Recyc
 
         holder.itemView.setOnClickListener {
             val pos = it.tag as Int
-            val filter = array[pos]
+            val selectedFilter = array[pos]
             val preference = if(!singleOnly) filter.value
                                     else storedPrefName
             if(singleOnly) {
                 val value = prefs.getString(preference,"")
-                if(value != filter.value) {
-                    prefs.edit().putString(preference, filter.value).apply()
-                    selectedValue = filter.value
+                if(value != selectedFilter.value) {
+                    prefs.edit().putString(preference, selectedFilter.value).apply()
+                    selectedValue = selectedFilter.value
                     GlobalScope.launch(Dispatchers.Main) {
                         notifyItemChanged(previousSelection)
                         notifyItemChanged(pos)

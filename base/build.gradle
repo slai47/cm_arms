@@ -22,7 +22,7 @@ android {
 
 dependencies {
     api 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    api 'com.google.android.material:material:1.1.0-alpha02'
+    api 'com.google.android.material:material:1.1.0-alpha03'
     api 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     application project(':app')
     feature project(':feed')
@@ -39,7 +39,7 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
-    def room_version = "2.1.0-alpha03"
+    def room_version = "2.1.0-alpha04"
 
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version" // use kapt for Kotlin

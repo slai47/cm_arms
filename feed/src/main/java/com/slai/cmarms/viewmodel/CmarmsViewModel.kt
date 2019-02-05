@@ -2,14 +2,11 @@ package com.slai.cmarms.viewmodel
 
 import android.app.Application
 import android.content.Context
-import android.provider.Settings
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.room.Room
-import com.bumptech.glide.Glide
 import com.slai.cmarms.backend.PostApi
 import com.slai.cmarms.db.AppDatabase
 import com.slai.cmarms.interfaces.IDispose
