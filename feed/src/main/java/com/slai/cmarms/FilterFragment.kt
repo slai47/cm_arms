@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,6 +58,24 @@ class FilterFragment : Fragment(), IFilter {
         updateButtonText(FilterDialogClosed(""))
 
         setupLocation()
+
+        filter_search_text.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(count > 0)
+                    filter_input_search_clear.visibility = View.VISIBLE
+                else
+                    filter_input_search_clear.visibility = View.GONE
+            }
+        })
+        filter_input_search_clear.setOnClickListener {
+            filter_search_text.setText("")
+        }
     }
 
     private fun setupLocation() {
@@ -73,10 +93,10 @@ class FilterFragment : Fragment(), IFilter {
     override fun updateLocationButton(on : Boolean){
         if(on){
             filter_location_icon.isEnabled = true
-            filter_location_icon.setImageResource(R.drawable.ic_location_active)
+            filter_location_progress.visibility = View.GONE
         } else {
             filter_location_icon.isEnabled = false
-            filter_location_icon.setImageResource(R.drawable.ic_location)
+            filter_location_progress.visibility = View.VISIBLE
         }
     }
 

@@ -19,19 +19,35 @@
                 android:layout_margin="8dp"
         >
             <!-- Search -->
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                                                                   android:layout_height="wrap_content"
-                                                                   android:id="@+id/filter_input_search"
-                                                                   android:theme="@style/TextInputLayoutAppearance"
+            <FrameLayout android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:id="@+id/filter_input_search"
+                         app:layout_constraintTop_toTopOf="parent"
+                         android:animateLayoutChanges="true"
             >
-                <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
-                                                                         android:layout_height="wrap_content"
-                                                                         android:id="@+id/filter_search_text"
-                                                                         android:hint="@string/search_keyword"
-                                                                         android:inputType="text|textCapWords"
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                                                                       android:layout_height="wrap_content"
+                                                                       android:theme="@style/TextInputLayoutAppearance"
+                >
+                    <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
+                                                                             android:layout_height="wrap_content"
+                                                                             android:id="@+id/filter_search_text"
+                                                                             android:hint="@string/search_keyword"
+                                                                             android:inputType="text|textCapWords"
+                    />
+                </com.google.android.material.textfield.TextInputLayout>
+                <androidx.appcompat.widget.AppCompatImageView android:layout_width="50dp"
+                                                              android:layout_height="50dp"
+                                                              android:padding="10dp"
+                                                              android:clickable="true"
+                                                              android:focusable="true"
+                                                              app:srcCompat="@drawable/ic_clear"
+                                                              android:layout_gravity="end"
+                                                              android:background="@drawable/ripple_background"
+                                                              android:id="@+id/filter_input_search_clear"
                 />
+            </FrameLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- location -->
             <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp"
@@ -57,19 +73,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.85" />
+                    app:layout_constraintGuide_percent="0.85"/>
 
             <androidx.appcompat.widget.AppCompatImageView android:layout_width="50dp"
-                       android:layout_height="50dp"
-                      app:layout_constraintStart_toEndOf="@+id/locationGuidelines"
-                       app:layout_constraintTop_toBottomOf="@id/filter_input_search"
-                       app:srcCompat="@drawable/ic_location"
+                                                          android:layout_height="50dp"
+                                                          app:layout_constraintStart_toEndOf="@+id/locationGuidelines"
+                                                          app:layout_constraintTop_toBottomOf="@id/filter_input_search"
+                                                          app:srcCompat="@drawable/ic_location"
                                                           android:id="@+id/filter_location_icon"
-                        android:padding="10dp"
-                      android:clickable="true"
+                                                          android:padding="10dp"
+                                                          android:clickable="true"
                                                           android:focusable="true"
-                      android:background="@drawable/ripple_background"
+                                                          android:background="@drawable/ripple_background"
             />
+
+            <ProgressBar android:layout_width="50dp"
+                         android:layout_height="50dp"
+                         app:layout_constraintStart_toEndOf="@+id/locationGuidelines"
+                         app:layout_constraintTop_toBottomOf="@id/filter_input_search"
+                         android:id="@+id/filter_location_progress"
+                         android:indeterminate="true"
+                         android:visibility="gone"
+                         android:padding="10dp"
+            />
+
 
             <!-- Prices -->
             <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp"
@@ -94,7 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.55" />
+                    app:layout_constraintGuide_percent="0.55"/>
             <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp"
                                                                    android:layout_height="wrap_content"
                                                                    android:id="@+id/filter_input_high_price"
