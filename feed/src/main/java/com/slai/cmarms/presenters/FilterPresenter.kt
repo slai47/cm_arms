@@ -77,6 +77,7 @@ class FilterPresenter(val filter : IFilter) : IDispose{
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray){
         if(requestCode == REQUEST_CODE){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                filter.updateLocationButton(true)
                 getLocation()
             }
         }

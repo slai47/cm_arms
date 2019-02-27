@@ -93,9 +93,11 @@ class FilterFragment : Fragment(), IFilter {
     override fun updateLocationButton(on : Boolean){
         if(on){
             filter_location_icon.isEnabled = true
+            filter_location_icon.visibility = View.VISIBLE
             filter_location_progress.visibility = View.GONE
         } else {
             filter_location_icon.isEnabled = false
+            filter_location_icon.visibility = View.GONE
             filter_location_progress.visibility = View.VISIBLE
         }
     }

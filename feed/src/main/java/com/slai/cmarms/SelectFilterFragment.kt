@@ -107,7 +107,6 @@ class SelectFilterFragment : Fragment() {
                     adapter!!.notifyDataSetChanged()
                     viewModel.query.filters.clear()
                     filter_refresh.visibility = View.VISIBLE
-
                 }
             }
         }
