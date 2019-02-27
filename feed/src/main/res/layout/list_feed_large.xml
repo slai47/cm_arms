@@ -13,6 +13,7 @@
                android:layout_height="250dp"
                android:id="@+id/list_feed_image"
                app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent"
     />
 
 

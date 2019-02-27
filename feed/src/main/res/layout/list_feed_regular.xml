@@ -15,6 +15,8 @@
                app:layout_constraintWidth_percent="0.35"
                app:layout_constraintWidth_default="percent"
                app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintLeft_toLeftOf="parent"
     />
 
     <androidx.constraintlayout.widget.Guideline
@@ -27,7 +29,7 @@
     <TextView
             android:text=""
             tools:text="Pocket Knives"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/PrimaryText"
             app:layout_constrainedWidth="true"
@@ -37,6 +39,7 @@
             app:layout_constraintStart_toEndOf="@id/guideline"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="2dp"
+            android:ellipsize="end"
     />
 
     <TextView

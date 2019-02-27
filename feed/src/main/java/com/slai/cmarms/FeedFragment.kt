@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -33,7 +34,7 @@ class FeedFragment : Fragment() {
     val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
 
     lateinit var feedAdapter : FeedAdapter
-    lateinit var manager : LinearLayoutManager
+    lateinit var manager : GridLayoutManager
 
     var endOfQueue : Snackbar? = null
 
@@ -102,7 +103,7 @@ class FeedFragment : Fragment() {
                 feed_recycler.scheduleLayoutAnimation()
             }
         } else {
-            manager = LinearLayoutManager(ctx, RecyclerView.VERTICAL, false)
+            manager = GridLayoutManager(ctx, resources.getInteger(R.integer.column_count))
 
             feedAdapter = FeedAdapter(context!!)
 
