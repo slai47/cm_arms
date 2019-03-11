@@ -12,6 +12,8 @@ I used each where they made the most sense. MVVM for the Feed and MVP for the Fi
 
 MVP to clean up the Geocode API out of the FilterFragment. 
 
+Used a few different ideas here from observer pattern, LiveData, interface callbacks, eventbus and more in this app. Just to test and play with each type.
+
 ## Libraries used
 
 * [Room](https://developer.android.com/topic/libraries/architecture/room) - For in memory db
