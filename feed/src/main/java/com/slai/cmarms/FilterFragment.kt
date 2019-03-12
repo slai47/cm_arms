@@ -26,15 +26,15 @@ import org.greenrobot.eventbus.Subscribe
 
 class FilterFragment : Fragment(), IFilter {
 
-    val HAS_CHECKED_LOCATION = "hasCheckedLocationPermissions1"
+    private val HAS_CHECKED_LOCATION = "hasCheckedLocationPermissions1"
 
-    val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
 
-    var permissionsAskSnackbar : Snackbar? = null
+    private var permissionsAskSnackbar : Snackbar? = null
 
-    val presenter = FilterPresenter(this)
+    private val presenter = FilterPresenter(this)
 
-    val pref by lazy { context!!.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE) }
+    private val pref by lazy { context!!.getSharedPreferences(PrefUtils.PREFERENCE_FIELD, Context.MODE_PRIVATE) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_filter, container, false)
@@ -44,10 +44,7 @@ class FilterFragment : Fragment(), IFilter {
         super.onResume()
         EventBus.getDefault().register(this)
 
-        filter_category.tag = SelectFilterFragment.EXTRA_CATEGORIES
-        filter_caliber.tag = SelectFilterFragment.EXTRA_CALIBERS
-        filter_firearm_type.tag = SelectFilterFragment.EXTRA_TYPES
-        filter_action_type.tag = SelectFilterFragment.EXTRA_ACTIONS
+        setFilterCategory()
 
         presenter.createDialogs(filter_category, filter_caliber, filter_firearm_type, filter_action_type)
 
@@ -59,6 +56,17 @@ class FilterFragment : Fragment(), IFilter {
 
         setupLocation()
 
+        addSearchClear()
+    }
+
+    private fun setFilterCategory() {
+        filter_category.tag = SelectFilterFragment.EXTRA_CATEGORIES
+        filter_caliber.tag = SelectFilterFragment.EXTRA_CALIBERS
+        filter_firearm_type.tag = SelectFilterFragment.EXTRA_TYPES
+        filter_action_type.tag = SelectFilterFragment.EXTRA_ACTIONS
+    }
+
+    private fun addSearchClear() {
         filter_search_text.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -67,7 +75,7 @@ class FilterFragment : Fragment(), IFilter {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(count > 0)
+                if (count > 0)
                     filter_input_search_clear.visibility = View.VISIBLE
                 else
                     filter_input_search_clear.visibility = View.GONE

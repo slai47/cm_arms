@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.slai.cmarms.adapters.FilterAdapter
+import com.slai.cmarms.interfaces.IDispose
 import com.slai.cmarms.model.Filter
 import com.slai.cmarms.model.FilterDialogClosed
 import com.slai.cmarms.viewmodel.CmarmsViewModel
@@ -34,7 +35,7 @@ class SelectFilterFragment : Fragment() {
         const val EXTRA_ACTIONS = "actions"
     }
 
-    val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProviders.of(activity!!).get(CmarmsViewModel::class.java) }
 
     lateinit var manager : LinearLayoutManager
     var adapter : FilterAdapter? = null
@@ -66,6 +67,7 @@ class SelectFilterFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
+        adapter?.dispose()
     }
 
     private fun setupFilter() {

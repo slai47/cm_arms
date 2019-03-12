@@ -9,11 +9,12 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.slai.cmarms.PrefUtils
 import com.slai.cmarms.R
+import com.slai.cmarms.interfaces.IDispose
 import com.slai.cmarms.model.Filter
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 
-class FilterAdapter(val context: Context, var array : ArrayList<Filter>) : RecyclerView.Adapter<FilterViewHolder>() {
+class FilterAdapter(val context: Context, var array : ArrayList<Filter>) : RecyclerView.Adapter<FilterViewHolder>(), IDispose {
 
     constructor(context: Context, array: ArrayList<Filter>, prefName : String?) : this(context, array) {
         if(prefName != null) {
@@ -73,7 +74,7 @@ class FilterAdapter(val context: Context, var array : ArrayList<Filter>) : Recyc
                 if(value != selectedFilter.value) {
                     prefs.edit().putString(preference, selectedFilter.value).apply()
                     selectedValue = selectedFilter.value
-                    GlobalScope.launch(Dispatchers.Main) {
+                    scope.launch(Dispatchers.Main) {
                         notifyItemChanged(previousSelection)
                         notifyItemChanged(pos)
                         previousSelection = pos
@@ -108,6 +109,10 @@ class FilterAdapter(val context: Context, var array : ArrayList<Filter>) : Recyc
             array = arrayCopy
             notifyDataSetChanged()
         }
+    }
+
+    override fun dispose() {
+        job.cancel()
     }
 }
 
